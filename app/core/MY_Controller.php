@@ -131,6 +131,7 @@ class MY_Controller extends CI_Controller
         $this->load->view($this->theme . $page, $data);
         $this->load->view($this->theme . 'footer');
     }
+
     public function print_arrays()
     {
         $args = func_get_args();

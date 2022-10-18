@@ -18,8 +18,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 | environments.
 |
 */
-$config['base_url'] = 'http://192.168.255.7/coffee/';
-$config['mis_api'] = 'http://192.168.255.10:9090/IBN_SINA_REPORT/';
+$config['base_url'] = 'http://localhost/coffee/';
 
 /*
 |--------------------------------------------------------------------------

@@ -92,38 +92,43 @@
                 </div>
                 <!-- /ppppppp -->
 
+                <?php foreach ($records as  $supplier) :
 
 
-                <div>
-                    <table id="CusData" cellpadding="0" cellspacing="0" border="0" class="table table-bordered table-condensed table-hover table-striped reports-table">
-                        <thead>
-                            <tr class="primary">
-                                <th style=" text-align: left; "><?= lang('Supplier'); ?></th>
-                                <th style=" text-align: left;  "><?= lang('Item'); ?></th>
-                                <th style=" text-align: end;  "><?= lang('PurchasedQty'); ?></th>
-                                <th style=" text-align: end;  "><?= lang('Purchase Value'); ?></th>
-                                <th style=" text-align: end;  "><?= lang('SoldQty'); ?></th>
-                                <th style=" text-align: end;  "><?= lang('TotalSales'); ?></th>
-                                <th style=" text-align: end;  "><?= lang('StockQty'); ?></th>
-                                <th style=" text-align: end;  "><?= lang('TotalBalance'); ?></th>
-                                <th style=" text-align: end;  "><?= lang('Profit'); ?></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach ($records as  $item) : ?>
-                                <tr>
-                                    <th style=" text-align: left; "><?php echo ($item['supplier']); ?></th>
-                                    <th style=" text-align: left; "><?php echo ($item['name']); ?></th>
-                                    <th style=" text-align: end; "><?php echo intval($item['PurchasedQty']); ?></th>
-                                    <th style=" text-align: end; "><?php echo intval($item['TotalPurchase']); ?></th>
-                                    <th style=" text-align: end; "><?php echo intval($item['SoldQty']); ?></th>
-                                    <th style=" text-align: end; "><?php echo intval($item['TotalSales']); ?></th>
-                                    <th style=" text-align: end; "><?php echo intval($item['BalacneQty']); ?></th>
-                                    <th style=" text-align: end; "><?php echo intval($item['TotalBalance']); ?></th>
-                                    <th style=" text-align: end; "><?php echo intval($item['Profit']); ?></th>
 
 
-                                    <!--[id] => 24
+                ?>
+
+                    <div>
+                        <table id="CusData" cellpadding="0" cellspacing="0" border="0" class="table table-bordered table-condensed table-hover table-striped reports-table">
+                            <thead>
+                                <tr class="primary">
+                                    <th style=" text-align: left; "><?= lang('Supplier'); ?></th>
+                                    <th style=" text-align: left;  "><?= lang('Item'); ?></th>
+                                    <th style=" text-align: end;  "><?= lang('PurchasedQty'); ?></th>
+                                    <th style=" text-align: end;  "><?= lang('Purchase Value'); ?></th>
+                                    <th style=" text-align: end;  "><?= lang('SoldQty'); ?></th>
+                                    <th style=" text-align: end;  "><?= lang('TotalSales'); ?></th>
+                                    <th style=" text-align: end;  "><?= lang('StockQty'); ?></th>
+                                    <th style=" text-align: end;  "><?= lang('TotalBalance'); ?></th>
+                                    <th style=" text-align: end;  "><?= lang('Profit'); ?></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($supplier as  $item) : ?>
+                                    <tr>
+                                        <th style=" text-align: left; "><?php echo ($item['supplier']); ?></th>
+                                        <th style=" text-align: left; "><?php echo ($item['name']); ?></th>
+                                        <th style=" text-align: end; "><?php echo intval($item['PurchasedQty']); ?></th>
+                                        <th style=" text-align: end; "><?php echo intval($item['TotalPurchase']); ?></th>
+                                        <th style=" text-align: end; "><?php echo intval($item['SoldQty']); ?></th>
+                                        <th style=" text-align: end; "><?php echo intval($item['TotalSales']); ?></th>
+                                        <th style=" text-align: end; "><?php echo intval($item['BalacneQty']); ?></th>
+                                        <th style=" text-align: end; "><?php echo intval($item['TotalBalance']); ?></th>
+                                        <th style=" text-align: end; "><?php echo intval($item['Profit']); ?></th>
+
+
+                                        <!--[id] => 24
                                         [code] => 56504770
                                         [name] => Lassi
                                         [supplier_id] => 
@@ -135,23 +140,23 @@
                                         [TotalBalance] => 16.00000000
                                         [TotalSales] => 0.00000000
                                         [Profit] => -16.00000000 -->
-                                </tr>
-                            <?php endforeach; ?>
+                                    </tr>
+                                <?php endforeach; ?>
 
-                            <tr>
-                                <th>Total</th>
-                                <!-- <th style=" text-align: end; "><?php echo $totalInvoice; ?></th>
+                                <tr>
+                                    <th>Total</th>
+                                    <!-- <th style=" text-align: end; "><?php echo $totalInvoice; ?></th>
                                 <th style=" text-align: end; "><?php echo $totalAmount; ?></th>
                                 <th style=" text-align: end; "><?php echo $totalCash; ?></th>
                                 <th style=" text-align: end; "><?php echo ($totalPaid - $totalCash); ?></th>
                                 <th style=" text-align: end; "><?php echo $totalPaid; ?></th>
                                 <th style=" text-align: end; "><?php echo $totalBalance; ?></th> -->
 
-                            </tr>
+                                </tr>
 
-                        </tbody>
-                        <tfoot class="no-print">
-                            <!-- <tr class="active">
+                            </tbody>
+                            <tfoot class="no-print">
+                                <!-- <tr class="active">
                             <th style=" text-align: left; "><?= lang('User'); ?></th>
                                 <th style=" text-align: end; "><?= lang('Invoice'); ?></th>
                                 <th style=" text-align: end; "><?= lang('Total Bill'); ?></th>
@@ -161,9 +166,13 @@
                                 <th style=" text-align: end; "><?= lang('Due'); ?></th>
 
                             </tr> -->
-                        </tfoot>
-                    </table>
-                </div>
+                            </tfoot>
+                        </table>
+                    </div>
+                <?php endforeach; ?>
+
+
+
             </div>
         </div>
     </div>
