@@ -333,9 +333,14 @@
                                 </a>
                             </li>
 
-                            <li class="dropdown">                           
-                                <a class="btn bdarkGreen tip" title="<?= lang('User Wise Collection') ?>" data-placement="bottom" href="<?= admin_url('reports/UserWiseCollection') ?>">
+                            <li class="dropdown">
+                                <a class="btn bdarkGreen tip" title="<?= lang('User Wise Collection') ?>" data-placement="bottom" href="<?= admin_url('reports/UserWiseCollection1') ?>">
                                     <i class="fa fa-money"></i> <span class="padding05"></span>
+                                </a>
+                            </li>
+                            <li class="dropdown">
+                                <a class="btn bdarkGreen pos-tip" title="<?= lang('My Report') ?>" data-placement="bottom" data-html="true" href="<?= admin_url('mis_reports/openModal') ?>" data-toggle="modal" data-target="#myModal">
+                                    My Report
                                 </a>
                             </li>
 
@@ -791,8 +796,9 @@
                                                 </a>
                                                 <ul>
 
+
                                                     <li id="reports_customer_report">
-                                                        <a href="<?= admin_url('reports/UserWiseCollection') ?>">
+                                                        <a href="<?= admin_url('reports/UserWiseCollection1') ?>">
                                                             <i class="fa fa-users"></i><span class="text"> <?= lang('User Wise Collection'); ?></span>
                                                         </a>
                                                     </li>
@@ -1250,16 +1256,6 @@
                                                     </a>
                                                     <ul>
 
-                                                    <li id="reports_customer_report">
-                                                        <a href="<?= admin_url('reports/UserWiseCollection') ?>">
-                                                            <i class="fa fa-users"></i><span class="text"> <?= lang('User Wise Collection'); ?></span>
-                                                        </a>
-                                                    </li>
-                                                    <li id="reports_customer_report">
-                                                        <a href="<?= admin_url('reports/productReport') ?>">
-                                                            <i class="fa fa-users"></i><span class="text"> <?= lang('Product Report'); ?></span>
-                                                        </a>
-                                                    </li>
 
 
 
@@ -1474,6 +1470,13 @@
 
                                         <?php
                                         } ?>
+
+                                        <li class="mm_mis_reports">
+                                            <a class="submenu" href="<?= admin_url('mis_reports'); ?>">
+                                                <i class="fa fa-list-alt"></i><span class="text"> <?= lang('Mis Reports'); ?></span>
+                                            </a>
+                                        </li>
+
                                     </ul>
                                 </div>
                                 <a href="#" id="main-menu-act" class="full visible-md visible-lg">

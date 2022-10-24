@@ -2,12 +2,6 @@
 
 declare(strict_types=1);
 
-/**
- * @see       https://github.com/laminas/laminas-servicemanager for the canonical source repository
- * @copyright https://github.com/laminas/laminas-servicemanager/blob/master/COPYRIGHT.md
- * @license   https://github.com/laminas/laminas-servicemanager/blob/master/LICENSE.md New BSD License
- */
-
 namespace Laminas\ServiceManager;
 
 /**
@@ -19,11 +13,11 @@ namespace Laminas\ServiceManager;
  *
  * - rename the method `canCreateServiceWithName()` to `canCreate()`, and:
  *   - rename the `$serviceLocator` argument to `$container`, and change the
- *     typehint to `Interop\Container\ContainerInterface`
+ *     typehint to `Psr\Container\ContainerInterface`
  *   - merge the `$name` and `$requestedName` arguments
  * - rename the method `createServiceWithName()` to `__invoke()`, and:
  *   - rename the `$serviceLocator` argument to `$container`, and change the
- *     typehint to `Interop\Container\ContainerInterface`
+ *     typehint to `Psr\Container\ContainerInterface`
  *   - merge the `$name` and `$requestedName` arguments
  *   - add the optional `array $options = null` argument.
  * - create a `canCreateServiceWithName()` method as defined in this interface, and have it
@@ -42,9 +36,8 @@ interface AbstractFactoryInterface extends Factory\AbstractFactoryInterface
     /**
      * Determine if we can create a service with name
      *
-     * @param ServiceLocatorInterface $serviceLocator
-     * @param $name
-     * @param $requestedName
+     * @param string $name
+     * @param string $requestedName
      * @return bool
      */
     public function canCreateServiceWithName(ServiceLocatorInterface $serviceLocator, $name, $requestedName);
@@ -52,9 +45,8 @@ interface AbstractFactoryInterface extends Factory\AbstractFactoryInterface
     /**
      * Create service with name
      *
-     * @param ServiceLocatorInterface $serviceLocator
-     * @param $name
-     * @param $requestedName
+     * @param string $name
+     * @param string $requestedName
      * @return mixed
      */
     public function createServiceWithName(ServiceLocatorInterface $serviceLocator, $name, $requestedName);

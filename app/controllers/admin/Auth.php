@@ -39,7 +39,8 @@ class Auth extends MY_Controller
 
     public function _valid_csrf_nonce()
     {
-        if ($this->input->post($this->session->flashdata('csrfkey')) !== false && $this->input->post($this->session->flashdata('csrfkey')) == $this->session->flashdata('csrfvalue')
+        if (
+            $this->input->post($this->session->flashdata('csrfkey')) !== false && $this->input->post($this->session->flashdata('csrfkey')) == $this->session->flashdata('csrfvalue')
         ) {
             return true;
         }
@@ -200,6 +201,7 @@ class Auth extends MY_Controller
 
     public function delete($id = null)
     {
+        $this->owner_only();
         if (DEMO) {
             $this->session->set_flashdata('warning', lang('disabled_in_demo'));
             redirect($_SERVER['HTTP_REFERER']);
@@ -479,7 +481,8 @@ class Auth extends MY_Controller
                 $query = $this->db->insert_string('captcha', $capdata);
                 $this->db->query($query);
                 $this->data['image']   = $cap['image'];
-                $this->data['captcha'] = ['name' => 'captcha',
+                $this->data['captcha'] = [
+                    'name' => 'captcha',
                     'id'                         => 'captcha',
                     'type'                       => 'text',
                     'class'                      => 'form-control',
@@ -488,14 +491,16 @@ class Auth extends MY_Controller
                 ];
             }
 
-            $this->data['identity'] = ['name' => 'identity',
+            $this->data['identity'] = [
+                'name' => 'identity',
                 'id'                          => 'identity',
                 'type'                        => 'text',
                 'class'                       => 'form-control',
                 'placeholder'                 => lang('email'),
                 'value'                       => $this->form_validation->set_value('identity'),
             ];
-            $this->data['password'] = ['name' => 'password',
+            $this->data['password'] = [
+                'name' => 'password',
                 'id'                          => 'password',
                 'type'                        => 'password',
                 'class'                       => 'form-control',
@@ -646,7 +651,8 @@ class Auth extends MY_Controller
             $query = $this->db->insert_string('captcha', $capdata);
             $this->db->query($query);
             $this->data['image']   = $cap['image'];
-            $this->data['captcha'] = ['name' => 'captcha',
+            $this->data['captcha'] = [
+                'name' => 'captcha',
                 'id'                         => 'captcha',
                 'type'                       => 'text',
                 'class'                      => 'form-control',
@@ -961,7 +967,7 @@ class Auth extends MY_Controller
         if (!$this->loggedIn) {
             admin_redirect('login');
         }
-        
+
         if (!($this->Owner || $this->Admin)) {
             $this->session->set_flashdata('warning', lang('access_denied'));
             redirect($_SERVER['HTTP_REFERER'] ?? 'admin/welcome');

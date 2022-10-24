@@ -140,6 +140,19 @@ class MY_Controller extends CI_Controller
             print_r($arg);
         }
         echo "</pre>";
-        die();
+        exit;
+    }
+
+    public function owner_only()
+    {
+        // if (!$this->Owner) {
+        //     $this->session->set_flashdata('error', lang('access_denied'));
+        //     admin_redirect('pos');
+        // }
+
+        if (!$this->Owner) {
+            $this->session->set_flashdata('warning', lang('access_denied'));
+            redirect($_SERVER['HTTP_REFERER']);
+        }
     }
 }

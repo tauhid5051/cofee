@@ -20,6 +20,20 @@ defined('BASEPATH') or exit('No direct script access allowed');
 */
 $config['base_url'] = 'http://localhost/coffee/';
 
+
+// db for jasper
+
+$config['jasper'] = array(
+    'driver' => 'mysql',
+    'username' => 'jasper',
+    'password' => 'dmRokon123',
+    'host' => 'localhost',
+    'database' => 'coffee',
+    'port' => '3306'
+);
+// db for jasper
+
+
 /*
 |--------------------------------------------------------------------------
 | Index File
@@ -362,6 +376,11 @@ $config['sess_save_path']          = 'sessions';
 $config['sess_match_ip']           = false;
 $config['sess_time_to_update']     = 300;
 $config['sess_regenerate_destroy'] = false;
+
+
+
+
+
 
 /*
 |--------------------------------------------------------------------------

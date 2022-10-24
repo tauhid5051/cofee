@@ -1,0 +1,36 @@
+{
+  "contacts": {
+    "person": [
+      {
+        "name": "Dulal Vai",
+        "age": "40",
+        "city": "Gazipur",
+        "phone": "+8801555555555"
+      },
+      {
+        "name": "Rokon Vai",
+        "age": "50",
+        "city": "Thakurgaon",
+        "phone": "+8801555555555"
+      },
+      {
+        "name": "Lokman Vai",
+        "age": "60",
+        "city": "Jhinaidah",
+        "phone": "+8801555555555"
+      },
+      {
+        "name": "Siraj Vai",
+        "age": "60",
+        "city": "Savar",
+        "phone": "+8801555555555"
+      },
+      {
+        "name": "Asraf Vai",
+        "age": "60",
+        "city": "Rangpur",
+        "phone": "+8801555555555"
+      }
+    ]
+  }
+}

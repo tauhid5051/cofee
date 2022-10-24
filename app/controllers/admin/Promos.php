@@ -38,7 +38,7 @@ class Promos extends MY_Controller
                 'product2get' => $this->input->post('product2get'),
                 'description' => $this->input->post('description'),
             ];
-        // $this->sma->print_arrays($data);
+            // $this->sma->print_arrays($data);
         } elseif ($this->input->post('add_promo')) {
             $this->session->set_flashdata('error', validation_errors());
             admin_redirect('promos/add');
@@ -57,6 +57,8 @@ class Promos extends MY_Controller
 
     public function delete($id = null)
     {
+        $this->owner_only();
+
         $this->sma->checkPermissions(null, true);
 
         if ($this->input->get('id')) {

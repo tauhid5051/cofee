@@ -307,6 +307,7 @@ class Customers extends MY_Controller
 
     public function delete($id = null)
     {
+        $this->owner_only();
         $this->sma->checkPermissions(null, true);
 
         if ($this->input->get('id')) {
@@ -544,7 +545,7 @@ class Customers extends MY_Controller
             ->join('users', 'users.id=deposits.created_by', 'left')
             ->where($this->db->dbprefix('deposits') . '.company_id', $company_id)
             ->add_column('Actions', "<div class=\"text-center\"><a class=\"tip\" title='" . lang('deposit_note') . "' href='" . admin_url('customers/deposit_note/$1') . "' data-toggle='modal' data-target='#myModal2'><i class=\"fa fa-file-text-o\"></i></a> <a class=\"tip\" title='" . lang('edit_deposit') . "' href='" . admin_url('customers/edit_deposit/$1') . "' data-toggle='modal' data-target='#myModal2'><i class=\"fa fa-edit\"></i></a> <a href='#' class='tip po' title='<b>" . lang('delete_deposit') . "</b>' data-content=\"<p>" . lang('r_u_sure') . "</p><a class='btn btn-danger po-delete' href='" . admin_url('customers/delete_deposit/$1') . "'>" . lang('i_m_sure') . "</a> <button class='btn po-close'>" . lang('no') . "</button>\"  rel='popover'><i class=\"fa fa-trash-o\"></i></a></div>", 'id')
-        ->unset_column('id');
+            ->unset_column('id');
         echo $this->datatables->generate();
     }
 

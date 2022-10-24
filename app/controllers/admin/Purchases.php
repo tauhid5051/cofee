@@ -167,7 +167,8 @@ class Purchases extends MY_Controller
             $total_tax      = $this->sma->formatDecimal(($product_tax + $order_tax), 4);
             // $grand_total    = $this->sma->formatDecimal(($this->sma->formatDecimal($total) + $this->sma->formatDecimal($total_tax) + $this->sma->formatDecimal($shipping) - $this->sma->formatDecimal($order_discount)), 4);
             $grand_total = $this->sma->formatDecimal(($total + $total_tax + $this->sma->formatDecimal($shipping) - $this->sma->formatDecimal($order_discount)), 4);
-            $data        = ['reference_no' => $reference,
+            $data        = [
+                'reference_no' => $reference,
                 'date'                     => $date,
                 'supplier_id'              => $supplier_id,
                 'supplier'                 => $supplier,
@@ -275,8 +276,10 @@ class Purchases extends MY_Controller
                         $tax_rate = $this->site->getTaxRateByID($row->tax_rate);
                         $ri       = $this->Settings->item_addition ? $row->id : $c;
 
-                        $pr[$ri] = ['id' => $c, 'item_id' => $row->id, 'label' => $row->name . ' (' . $row->code . ')',
-                            'row'        => $row, 'tax_rate' => $tax_rate, 'units' => $units, 'options' => $options, ];
+                        $pr[$ri] = [
+                            'id' => $c, 'item_id' => $row->id, 'label' => $row->name . ' (' . $row->code . ')',
+                            'row'        => $row, 'tax_rate' => $tax_rate, 'units' => $units, 'options' => $options,
+                        ];
                         $c++;
                     }
                 }
@@ -326,7 +329,7 @@ class Purchases extends MY_Controller
 
             $attachments        = $this->attachments->upload();
             $data['attachment'] = !empty($attachments);
-        //$this->sma->print_arrays($data);
+            //$this->sma->print_arrays($data);
         } elseif ($this->input->post('add_expense')) {
             $this->session->set_flashdata('error', validation_errors());
             redirect($_SERVER['HTTP_REFERER']);
@@ -456,6 +459,8 @@ class Purchases extends MY_Controller
 
     public function delete($id = null)
     {
+        $this->owner_only();
+
         $this->sma->checkPermissions(null, true);
 
         if ($this->input->get('id')) {
@@ -673,7 +678,8 @@ class Purchases extends MY_Controller
             $total_tax      = $this->sma->formatDecimal(($product_tax + $order_tax), 4);
             // $grand_total    = $this->sma->formatDecimal(($this->sma->formatDecimal($total) + $this->sma->formatDecimal($total_tax) + $this->sma->formatDecimal($shipping) - $this->sma->formatDecimal($order_discount)), 4);
             $grand_total = $this->sma->formatDecimal(($total + $total_tax + $this->sma->formatDecimal($shipping) - $this->sma->formatDecimal($order_discount)), 4);
-            $data        = ['reference_no' => $reference,
+            $data        = [
+                'reference_no' => $reference,
                 'supplier_id'              => $supplier_id,
                 'supplier'                 => $supplier,
                 'warehouse_id'             => $warehouse_id,
@@ -752,8 +758,10 @@ class Purchases extends MY_Controller
                 $tax_rate = $this->site->getTaxRateByID($row->tax_rate);
                 $ri       = $this->Settings->item_addition ? $row->id : $c;
 
-                $pr[$ri] = ['id' => $c, 'item_id' => $row->id, 'label' => $row->name . ' (' . $row->code . ')',
-                    'row'        => $row, 'tax_rate' => $tax_rate, 'units' => $units, 'options' => $options, ];
+                $pr[$ri] = [
+                    'id' => $c, 'item_id' => $row->id, 'label' => $row->name . ' (' . $row->code . ')',
+                    'row'        => $row, 'tax_rate' => $tax_rate, 'units' => $units, 'options' => $options,
+                ];
                 $c++;
             }
 
@@ -803,7 +811,7 @@ class Purchases extends MY_Controller
 
             $attachments        = $this->attachments->upload();
             $data['attachment'] = !empty($attachments);
-        //$this->sma->print_arrays($data);
+            //$this->sma->print_arrays($data);
         } elseif ($this->input->post('edit_expense')) {
             $this->session->set_flashdata('error', validation_errors());
             redirect($_SERVER['HTTP_REFERER']);
@@ -958,12 +966,14 @@ class Purchases extends MY_Controller
             } else {
                 $purchase_temp = file_get_contents('./themes/default/admin/views/email_templates/purchase.html');
             }
-            $this->data['subject'] = ['name' => 'subject',
+            $this->data['subject'] = [
+                'name' => 'subject',
                 'id'                         => 'subject',
                 'type'                       => 'text',
                 'value'                      => $this->form_validation->set_value('subject', lang('purchase_order') . ' (' . $inv->reference_no . ') ' . lang('from') . ' ' . $this->Settings->site_name),
             ];
-            $this->data['note'] = ['name' => 'note',
+            $this->data['note'] = [
+                'name' => 'note',
                 'id'                      => 'note',
                 'type'                    => 'text',
                 'value'                   => $this->form_validation->set_value('note', $purchase_temp),
@@ -1113,12 +1123,12 @@ class Purchases extends MY_Controller
         $edit_link   = anchor('admin/purchases/edit_expense/$1', '<i class="fa fa-edit"></i> ' . lang('edit_expense'), 'data-toggle="modal" data-target="#myModal"');
         //$attachment_link = '<a href="'.base_url('assets/uploads/$1').'" target="_blank"><i class="fa fa-chain"></i></a>';
         $delete_link = "<a href='#' class='po' title='<b>" . $this->lang->line('delete_expense') . "</b>' data-content=\"<p>"
-        . lang('r_u_sure') . "</p><a class='btn btn-danger po-delete' href='" . admin_url('purchases/delete_expense/$1') . "'>"
-        . lang('i_m_sure') . "</a> <button class='btn po-close'>" . lang('no') . "</button>\"  rel='popover'><i class=\"fa fa-trash-o\"></i> "
-        . lang('delete_expense') . '</a>';
+            . lang('r_u_sure') . "</p><a class='btn btn-danger po-delete' href='" . admin_url('purchases/delete_expense/$1') . "'>"
+            . lang('i_m_sure') . "</a> <button class='btn po-close'>" . lang('no') . "</button>\"  rel='popover'><i class=\"fa fa-trash-o\"></i> "
+            . lang('delete_expense') . '</a>';
         $action = '<div class="text-center"><div class="btn-group text-left">'
-        . '<button type="button" class="btn btn-default btn-xs btn-primary dropdown-toggle" data-toggle="dropdown">'
-        . lang('actions') . ' <span class="caret"></span></button>
+            . '<button type="button" class="btn btn-default btn-xs btn-primary dropdown-toggle" data-toggle="dropdown">'
+            . lang('actions') . ' <span class="caret"></span></button>
         <ul class="dropdown-menu pull-right" role="menu">
             <li>' . $detail_link . '</li>
             <li>' . $edit_link . '</li>
@@ -1160,12 +1170,12 @@ class Purchases extends MY_Controller
         $print_barcode    = anchor('admin/products/print_barcodes/?purchase=$1', '<i class="fa fa-print"></i> ' . lang('print_barcodes'));
         $return_link      = anchor('admin/purchases/return_purchase/$1', '<i class="fa fa-angle-double-left"></i> ' . lang('return_purchase'));
         $delete_link      = "<a href='#' class='po' title='<b>" . $this->lang->line('delete_purchase') . "</b>' data-content=\"<p>"
-        . lang('r_u_sure') . "</p><a class='btn btn-danger po-delete' href='" . admin_url('purchases/delete/$1') . "'>"
-        . lang('i_m_sure') . "</a> <button class='btn po-close'>" . lang('no') . "</button>\"  rel='popover'><i class=\"fa fa-trash-o\"></i> "
-        . lang('delete_purchase') . '</a>';
+            . lang('r_u_sure') . "</p><a class='btn btn-danger po-delete' href='" . admin_url('purchases/delete/$1') . "'>"
+            . lang('i_m_sure') . "</a> <button class='btn po-close'>" . lang('no') . "</button>\"  rel='popover'><i class=\"fa fa-trash-o\"></i> "
+            . lang('delete_purchase') . '</a>';
         $action = '<div class="text-center"><div class="btn-group text-left">'
-        . '<button type="button" class="btn btn-default btn-xs btn-primary dropdown-toggle" data-toggle="dropdown">'
-        . lang('actions') . ' <span class="caret"></span></button>
+            . '<button type="button" class="btn btn-default btn-xs btn-primary dropdown-toggle" data-toggle="dropdown">'
+            . lang('actions') . ' <span class="caret"></span></button>
         <ul class="dropdown-menu pull-right" role="menu">
             <li>' . $detail_link . '</li>
             <li>' . $payments_link . '</li>
@@ -1567,7 +1577,8 @@ class Purchases extends MY_Controller
             $total_tax      = $this->sma->formatDecimal(($product_tax + $order_tax), 4);
             // $grand_total    = $this->sma->formatDecimal(($this->sma->formatDecimal($total) + $this->sma->formatDecimal($total_tax) + $this->sma->formatDecimal($shipping) - $this->sma->formatDecimal($order_discount)), 4);
             $grand_total = $this->sma->formatDecimal(($total + $total_tax + $this->sma->formatDecimal($shipping) - $this->sma->formatDecimal($order_discount)), 4);
-            $data        = ['reference_no' => $reference,
+            $data        = [
+                'reference_no' => $reference,
                 'date'                     => $date,
                 'supplier_id'              => $supplier_id,
                 'supplier'                 => $supplier,
@@ -1733,7 +1744,8 @@ class Purchases extends MY_Controller
             $order_tax      = $this->site->calculateOrderTax($this->input->post('order_tax'), ($total + $product_tax - $order_discount));
             $total_tax      = $this->sma->formatDecimal(($product_tax + $order_tax), 4);
             $grand_total    = $this->sma->formatDecimal(($this->sma->formatDecimal($total) + $this->sma->formatDecimal($total_tax) + $this->sma->formatDecimal($return_surcharge) - $this->sma->formatDecimal($order_discount)), 4);
-            $data           = ['date' => $date,
+            $data           = [
+                'date' => $date,
                 'purchase_id'         => $id,
                 'reference_no'        => $purchase->reference_no,
                 'supplier_id'         => $purchase->supplier_id,
@@ -1909,8 +1921,10 @@ class Purchases extends MY_Controller
                     }
                 }
 
-                $pr[] = ['id' => sha1($c . $r), 'item_id' => $row->id, 'label' => $row->name . ' (' . $row->code . ')',
-                    'row'     => $row, 'tax_rate' => $tax_rate, 'units' => $units, 'options' => $options, ];
+                $pr[] = [
+                    'id' => sha1($c . $r), 'item_id' => $row->id, 'label' => $row->name . ' (' . $row->code . ')',
+                    'row'     => $row, 'tax_rate' => $tax_rate, 'units' => $units, 'options' => $options,
+                ];
                 $r++;
             }
             $this->sma->send_json($pr);

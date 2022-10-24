@@ -112,6 +112,8 @@ class Suppliers extends MY_Controller
 
     public function delete($id = null)
     {
+        $this->owner_only();
+
         $this->sma->checkPermissions(null, true);
 
         if ($this->input->get('id')) {

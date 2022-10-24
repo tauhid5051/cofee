@@ -144,7 +144,8 @@ class Quotes extends MY_Controller
             $order_tax      = $this->site->calculateOrderTax($this->input->post('order_tax'), ($total + $product_tax - $order_discount));
             $total_tax      = $this->sma->formatDecimal(($product_tax + $order_tax), 4);
             $grand_total    = $this->sma->formatDecimal(($total + $total_tax + $this->sma->formatDecimal($shipping) - $order_discount), 4);
-            $data           = ['date' => $date,
+            $data           = [
+                'date' => $date,
                 'reference_no'        => $reference,
                 'customer_id'         => $customer_id,
                 'customer'            => $customer,
@@ -243,6 +244,8 @@ class Quotes extends MY_Controller
 
     public function delete($id = null)
     {
+        $this->owner_only();
+
         $this->sma->checkPermissions(null, true);
 
         if ($this->input->get('id')) {
@@ -390,7 +393,8 @@ class Quotes extends MY_Controller
             $order_tax      = $this->site->calculateOrderTax($this->input->post('order_tax'), ($total + $product_tax - $order_discount));
             $total_tax      = $this->sma->formatDecimal(($product_tax + $order_tax), 4);
             $grand_total    = $this->sma->formatDecimal(($total + $total_tax + $this->sma->formatDecimal($shipping) - $order_discount), 4);
-            $data           = ['date' => $date,
+            $data           = [
+                'date' => $date,
                 'reference_no'        => $reference,
                 'customer_id'         => $customer_id,
                 'customer'            => $customer,
@@ -596,12 +600,14 @@ class Quotes extends MY_Controller
                 $quote_temp = file_get_contents('./themes/default/admin/views/email_templates/quote.html');
             }
 
-            $this->data['subject'] = ['name' => 'subject',
+            $this->data['subject'] = [
+                'name' => 'subject',
                 'id'                         => 'subject',
                 'type'                       => 'text',
                 'value'                      => $this->form_validation->set_value('subject', lang('quote') . ' (' . $inv->reference_no . ') ' . lang('from') . ' ' . $this->Settings->site_name),
             ];
-            $this->data['note'] = ['name' => 'note',
+            $this->data['note'] = [
+                'name' => 'note',
                 'id'                      => 'note',
                 'type'                    => 'text',
                 'value'                   => $this->form_validation->set_value('note', $quote_temp),
@@ -629,12 +635,12 @@ class Quotes extends MY_Controller
         $pc_link      = anchor('admin/purchases/add/$1', '<i class="fa fa-star"></i> ' . lang('create_purchase'));
         $pdf_link     = anchor('admin/quotes/pdf/$1', '<i class="fa fa-file-pdf-o"></i> ' . lang('download_pdf'));
         $delete_link  = "<a href='#' class='po' title='<b>" . $this->lang->line('delete_quote') . "</b>' data-content=\"<p>"
-        . lang('r_u_sure') . "</p><a class='btn btn-danger po-delete' href='" . admin_url('quotes/delete/$1') . "'>"
-        . lang('i_m_sure') . "</a> <button class='btn po-close'>" . lang('no') . "</button>\"  rel='popover'><i class=\"fa fa-trash-o\"></i> "
-        . lang('delete_quote') . '</a>';
+            . lang('r_u_sure') . "</p><a class='btn btn-danger po-delete' href='" . admin_url('quotes/delete/$1') . "'>"
+            . lang('i_m_sure') . "</a> <button class='btn po-close'>" . lang('no') . "</button>\"  rel='popover'><i class=\"fa fa-trash-o\"></i> "
+            . lang('delete_quote') . '</a>';
         $action = '<div class="text-center"><div class="btn-group text-left">'
-        . '<button type="button" class="btn btn-default btn-xs btn-primary dropdown-toggle" data-toggle="dropdown">'
-        . lang('actions') . ' <span class="caret"></span></button>
+            . '<button type="button" class="btn btn-default btn-xs btn-primary dropdown-toggle" data-toggle="dropdown">'
+            . lang('actions') . ' <span class="caret"></span></button>
                     <ul class="dropdown-menu pull-right" role="menu">
                         <li>' . $detail_link . '</li>
                         <li>' . $edit_link . '</li>
@@ -899,8 +905,10 @@ class Quotes extends MY_Controller
                 $units    = $this->site->getUnitsByBUID($row->base_unit);
                 $tax_rate = $this->site->getTaxRateByID($row->tax_rate);
 
-                $pr[] = ['id' => sha1($c . $r), 'item_id' => $row->id, 'label' => $row->name . ' (' . $row->code . ')', 'category' => $row->category_id,
-                    'row'     => $row, 'combo_items' => $combo_items, 'tax_rate' => $tax_rate, 'units' => $units, 'options' => $options, ];
+                $pr[] = [
+                    'id' => sha1($c . $r), 'item_id' => $row->id, 'label' => $row->name . ' (' . $row->code . ')', 'category' => $row->category_id,
+                    'row'     => $row, 'combo_items' => $combo_items, 'tax_rate' => $tax_rate, 'units' => $units, 'options' => $options,
+                ];
                 $r++;
             }
             $this->sma->send_json($pr);

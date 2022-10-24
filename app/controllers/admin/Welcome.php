@@ -23,6 +23,8 @@ class Welcome extends MY_Controller
 
     public function delete($id, $file)
     {
+        $this->owner_only();
+
         $result = false;
         if ($this->Owner || $this->Admin) {
             $this->db->delete('attachments', ['id' => $id]);

@@ -165,7 +165,8 @@ class Sales extends MY_Controller
             $total_tax      = $this->sma->formatDecimal(($product_tax + $order_tax), 4);
             // $grand_total    = $this->sma->formatDecimal(($this->sma->formatDecimal($total) + $this->sma->formatDecimal($total_tax) + $this->sma->formatDecimal($shipping) - $this->sma->formatDecimal($order_discount)), 4);
             $grand_total = $this->sma->formatDecimal(($total + $total_tax + $this->sma->formatDecimal($shipping) - $this->sma->formatDecimal($order_discount)), 4);
-            $data        = ['date'  => $date,
+            $data        = [
+                'date'  => $date,
                 'reference_no'      => $reference,
                 'customer_id'       => $customer_id,
                 'customer'          => $customer,
@@ -328,8 +329,10 @@ class Sales extends MY_Controller
                     $tax_rate = $this->site->getTaxRateByID($row->tax_rate);
                     $ri       = $this->Settings->item_addition ? $row->id : $c;
 
-                    $pr[$ri] = ['id' => $c, 'item_id' => $row->id, 'label' => $row->name . ' (' . $row->code . ')',
-                        'row'        => $row, 'combo_items' => $combo_items, 'tax_rate' => $tax_rate, 'units' => $units, 'options' => $options, ];
+                    $pr[$ri] = [
+                        'id' => $c, 'item_id' => $row->id, 'label' => $row->name . ' (' . $row->code . ')',
+                        'row'        => $row, 'combo_items' => $combo_items, 'tax_rate' => $tax_rate, 'units' => $units, 'options' => $options,
+                    ];
                     $c++;
                 }
                 $this->data['quote_items'] = json_encode($pr);
@@ -440,7 +443,8 @@ class Sales extends MY_Controller
         if ($this->form_validation->run() == true) {
             $customer_details = $this->input->post('customer') ? $this->site->getCompanyByID($this->input->post('customer')) : null;
             $customer         = $customer_details ? $customer_details->company : null;
-            $data             = ['card_no' => $this->input->post('card_no'),
+            $data             = [
+                'card_no' => $this->input->post('card_no'),
                 'value'                    => $this->input->post('value'),
                 'customer_id'              => $this->input->post('customer') ? $this->input->post('customer') : null,
                 'customer'                 => $customer,
@@ -617,6 +621,8 @@ class Sales extends MY_Controller
 
     public function delete($id = null)
     {
+        $this->owner_only();
+
         $this->sma->checkPermissions(null, true);
 
         if ($this->input->get('id')) {
@@ -914,7 +920,8 @@ class Sales extends MY_Controller
             $total_tax      = $this->sma->formatDecimal(($product_tax + $order_tax), 4);
             // $grand_total    = $this->sma->formatDecimal(($this->sma->formatDecimal($total) + $this->sma->formatDecimal($total_tax) + $this->sma->formatDecimal($shipping) - $this->sma->formatDecimal($order_discount)), 4);
             $grand_total = $this->sma->formatDecimal(($total + $total_tax + $this->sma->formatDecimal($shipping) - $this->sma->formatDecimal($order_discount)), 4);
-            $data        = ['date'  => $date,
+            $data        = [
+                'date'  => $date,
                 'reference_no'      => $reference,
                 'customer_id'       => $customer_id,
                 'customer'          => $customer,
@@ -1034,8 +1041,10 @@ class Sales extends MY_Controller
                 $tax_rate = $this->site->getTaxRateByID($row->tax_rate);
                 $ri       = $this->Settings->item_addition ? $row->id : $c;
 
-                $pr[$ri] = ['id' => $c, 'item_id' => $row->id, 'label' => $row->name . ' (' . $row->code . ')',
-                    'row'        => $row, 'combo_items' => $combo_items, 'tax_rate' => $tax_rate, 'units' => $units, 'options' => $options, ];
+                $pr[$ri] = [
+                    'id' => $c, 'item_id' => $row->id, 'label' => $row->name . ' (' . $row->code . ')',
+                    'row'        => $row, 'combo_items' => $combo_items, 'tax_rate' => $tax_rate, 'units' => $units, 'options' => $options,
+                ];
                 $c++;
             }
 
@@ -1133,7 +1142,8 @@ class Sales extends MY_Controller
             $gift_card        = $this->site->getGiftCardByID($id);
             $customer_details = $this->input->post('customer') ? $this->site->getCompanyByID($this->input->post('customer')) : null;
             $customer         = $customer_details ? $customer_details->company : null;
-            $data             = ['card_no' => $this->input->post('card_no'),
+            $data             = [
+                'card_no' => $this->input->post('card_no'),
                 'value'                    => $this->input->post('value'),
                 'customer_id'              => $this->input->post('customer') ? $this->input->post('customer') : null,
                 'customer'                 => $customer,
@@ -1329,12 +1339,14 @@ class Sales extends MY_Controller
                 $sale_temp = file_get_contents('./themes/default/admin/views/email_templates/sale.html');
             }
 
-            $this->data['subject'] = ['name' => 'subject',
+            $this->data['subject'] = [
+                'name' => 'subject',
                 'id'                         => 'subject',
                 'type'                       => 'text',
                 'value'                      => $this->form_validation->set_value('subject', lang('invoice') . ' (' . $inv->reference_no . ') ' . lang('from') . ' ' . $this->Settings->site_name),
             ];
-            $this->data['note'] = ['name' => 'note',
+            $this->data['note'] = [
+                'name' => 'note',
                 'id'                      => 'note',
                 'type'                    => 'text',
                 'value'                   => $this->form_validation->set_value('note', $sale_temp),
@@ -1406,12 +1418,12 @@ class Sales extends MY_Controller
         $edit_link   = anchor('admin/sales/edit_delivery/$1', '<i class="fa fa-edit"></i> ' . lang('edit_delivery'), 'data-toggle="modal" data-target="#myModal"');
         $pdf_link    = anchor('admin/sales/pdf_delivery/$1', '<i class="fa fa-file-pdf-o"></i> ' . lang('download_pdf'));
         $delete_link = "<a href='#' class='po' title='<b>" . lang('delete_delivery') . "</b>' data-content=\"<p>"
-        . lang('r_u_sure') . "</p><a class='btn btn-danger po-delete' href='" . admin_url('sales/delete_delivery/$1') . "'>"
-        . lang('i_m_sure') . "</a> <button class='btn po-close'>" . lang('no') . "</button>\"  rel='popover'><i class=\"fa fa-trash-o\"></i> "
-        . lang('delete_delivery') . '</a>';
+            . lang('r_u_sure') . "</p><a class='btn btn-danger po-delete' href='" . admin_url('sales/delete_delivery/$1') . "'>"
+            . lang('i_m_sure') . "</a> <button class='btn po-close'>" . lang('no') . "</button>\"  rel='popover'><i class=\"fa fa-trash-o\"></i> "
+            . lang('delete_delivery') . '</a>';
         $action = '<div class="text-center"><div class="btn-group text-left">'
-        . '<button type="button" class="btn btn-default btn-xs btn-primary dropdown-toggle" data-toggle="dropdown">'
-        . lang('actions') . ' <span class="caret"></span></button>
+            . '<button type="button" class="btn btn-default btn-xs btn-primary dropdown-toggle" data-toggle="dropdown">'
+            . lang('actions') . ' <span class="caret"></span></button>
     <ul class="dropdown-menu pull-right" role="menu">
         <li>' . $detail_link . '</li>
         <li>' . $edit_link . '</li>
@@ -1464,12 +1476,12 @@ class Sales extends MY_Controller
         $pdf_link          = anchor('admin/sales/pdf/$1', '<i class="fa fa-file-pdf-o"></i> ' . lang('download_pdf'));
         $return_link       = anchor('admin/sales/return_sale/$1', '<i class="fa fa-angle-double-left"></i> ' . lang('return_sale'));
         $delete_link       = "<a href='#' class='po' title='<b>" . lang('delete_sale') . "</b>' data-content=\"<p>"
-        . lang('r_u_sure') . "</p><a class='btn btn-danger po-delete' href='" . admin_url('sales/delete/$1') . "'>"
-        . lang('i_m_sure') . "</a> <button class='btn po-close'>" . lang('no') . "</button>\"  rel='popover'><i class=\"fa fa-trash-o\"></i> "
-        . lang('delete_sale') . '</a>';
+            . lang('r_u_sure') . "</p><a class='btn btn-danger po-delete' href='" . admin_url('sales/delete/$1') . "'>"
+            . lang('i_m_sure') . "</a> <button class='btn po-close'>" . lang('no') . "</button>\"  rel='popover'><i class=\"fa fa-trash-o\"></i> "
+            . lang('delete_sale') . '</a>';
         $action = '<div class="text-center"><div class="btn-group text-left">'
-        . '<button type="button" class="btn btn-default btn-xs btn-primary dropdown-toggle" data-toggle="dropdown">'
-        . lang('actions') . ' <span class="caret"></span></button>
+            . '<button type="button" class="btn btn-default btn-xs btn-primary dropdown-toggle" data-toggle="dropdown">'
+            . lang('actions') . ' <span class="caret"></span></button>
         <ul class="dropdown-menu pull-right" role="menu">
             <li>' . $detail_link . '</li>
             <li>' . $duplicate_link . '</li>
@@ -1504,8 +1516,8 @@ class Sales extends MY_Controller
         }
         if ($this->input->get('delivery') == 'no') {
             $this->datatables->join('deliveries', 'deliveries.sale_id=sales.id', 'left')
-            ->where('sales.sale_status', 'completed')->where('sales.payment_status', 'paid')
-            ->where("({$this->db->dbprefix('deliveries')}.status != 'delivered' OR {$this->db->dbprefix('deliveries')}.status IS NULL)", null);
+                ->where('sales.sale_status', 'completed')->where('sales.payment_status', 'paid')
+                ->where("({$this->db->dbprefix('deliveries')}.status != 'delivered' OR {$this->db->dbprefix('deliveries')}.status IS NULL)", null);
         }
         if ($this->input->get('attachment') == 'yes') {
             $this->datatables->where('payment_status !=', 'paid')->where('attachment !=', null);
@@ -2254,7 +2266,8 @@ class Sales extends MY_Controller
             $total_tax      = $this->sma->formatDecimal(($product_tax + $order_tax), 4);
             // $grand_total    = $this->sma->formatDecimal(($this->sma->formatDecimal($total) + $this->sma->formatDecimal($total_tax) + $this->sma->formatDecimal($shipping) - $this->sma->formatDecimal($order_discount)), 4);
             $grand_total = $this->sma->formatDecimal(($total + $total_tax + $this->sma->formatDecimal($shipping) - $this->sma->formatDecimal($order_discount)), 4);
-            $data        = ['date'  => $date,
+            $data        = [
+                'date'  => $date,
                 'reference_no'      => $reference,
                 'customer_id'       => $customer_id,
                 'customer'          => $customer,
@@ -2345,7 +2358,8 @@ class Sales extends MY_Controller
 
         $customer_details = (!empty($gcData[2])) ? $this->site->getCompanyByID($gcData[2]) : null;
         $customer         = $customer_details ? $customer_details->company : null;
-        $data             = ['card_no' => $gcData[0],
+        $data             = [
+            'card_no' => $gcData[0],
             'value'                    => $gcData[1],
             'customer_id'              => (!empty($gcData[2])) ? $gcData[2] : null,
             'customer'                 => $customer,
@@ -2466,8 +2480,10 @@ class Sales extends MY_Controller
                 $units    = $this->site->getUnitsByBUID($row->base_unit);
                 $tax_rate = $this->site->getTaxRateByID($row->tax_rate);
 
-                $pr[] = ['id' => sha1($c . $r), 'item_id' => $row->id, 'label' => $row->name . ' (' . $row->code . ')', 'category' => $row->category_id,
-                    'row'     => $row, 'combo_items' => $combo_items, 'tax_rate' => $tax_rate, 'units' => $units, 'options' => $options, ];
+                $pr[] = [
+                    'id' => sha1($c . $r), 'item_id' => $row->id, 'label' => $row->name . ' (' . $row->code . ')', 'category' => $row->category_id,
+                    'row'     => $row, 'combo_items' => $combo_items, 'tax_rate' => $tax_rate, 'units' => $units, 'options' => $options,
+                ];
                 $r++;
             }
             $this->sma->send_json($pr);
@@ -2483,7 +2499,8 @@ class Sales extends MY_Controller
         $this->form_validation->set_rules('amount', lang('amount'), 'trim|integer|required');
 
         if ($this->form_validation->run() == true) {
-            $data = ['card_id' => $card_id,
+            $data = [
+                'card_id' => $card_id,
                 'amount'       => $this->input->post('amount'),
                 'date'         => date('Y-m-d H:i:s'),
                 'created_by'   => $this->session->userdata('user_id'),

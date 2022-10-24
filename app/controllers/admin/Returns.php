@@ -208,6 +208,8 @@ class Returns extends MY_Controller
 
     public function delete($id = null)
     {
+        $this->owner_only();
+
         $this->sma->checkPermissions(null, true);
 
         if ($this->input->get('id')) {
@@ -458,8 +460,10 @@ class Returns extends MY_Controller
                 $tax_rate = $this->site->getTaxRateByID($row->tax_rate);
                 $ri       = $this->Settings->item_addition ? $row->id : $c;
 
-                $pr[$ri] = ['id' => $c, 'item_id' => $row->id, 'label' => $row->name . ' (' . $row->code . ')',
-                    'row'        => $row, 'combo_items' => $combo_items, 'tax_rate' => $tax_rate, 'units' => $units, 'options' => $options, ];
+                $pr[$ri] = [
+                    'id' => $c, 'item_id' => $row->id, 'label' => $row->name . ' (' . $row->code . ')',
+                    'row'        => $row, 'combo_items' => $combo_items, 'tax_rate' => $tax_rate, 'units' => $units, 'options' => $options,
+                ];
                 $c++;
             }
             $this->data['inv_items']  = json_encode($pr);
@@ -579,8 +583,10 @@ class Returns extends MY_Controller
                 $units    = $this->site->getUnitsByBUID($row->base_unit);
                 $tax_rate = $this->site->getTaxRateByID($row->tax_rate);
 
-                $pr[] = ['id' => sha1($c . $r), 'item_id' => $row->id, 'label' => $row->name . ' (' . $row->code . ')',
-                    'row'     => $row, 'tax_rate' => $tax_rate, 'units' => $units, 'options' => $options, ];
+                $pr[] = [
+                    'id' => sha1($c . $r), 'item_id' => $row->id, 'label' => $row->name . ' (' . $row->code . ')',
+                    'row'     => $row, 'tax_rate' => $tax_rate, 'units' => $units, 'options' => $options,
+                ];
                 $r++;
             }
             $this->sma->send_json($pr);

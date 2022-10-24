@@ -2,12 +2,6 @@
 
 declare(strict_types=1);
 
-/**
- * @see       https://github.com/laminas/laminas-servicemanager for the canonical source repository
- * @copyright https://github.com/laminas/laminas-servicemanager/blob/master/COPYRIGHT.md
- * @license   https://github.com/laminas/laminas-servicemanager/blob/master/LICENSE.md New BSD License
- */
-
 namespace Laminas\ServiceManager;
 
 /**
@@ -19,7 +13,7 @@ namespace Laminas\ServiceManager;
  *
  * - rename the method `createService()` to `__invoke()`, and:
  *   - rename the `$serviceLocator` argument to `$container`, and change the
- *     typehint to `Interop\Container\ContainerInterface`
+ *     typehint to `Psr\Container\ContainerInterface`
  *   - add the `$requestedName` as a second argument
  *   - add the optional `array $options = null` argument as a final argument
  * - create a `createService()` method as defined in this interface, and have it
@@ -36,7 +30,6 @@ interface FactoryInterface extends Factory\FactoryInterface
     /**
      * Create service
      *
-     * @param ServiceLocatorInterface $serviceLocator
      * @return mixed
      */
     public function createService(ServiceLocatorInterface $serviceLocator);

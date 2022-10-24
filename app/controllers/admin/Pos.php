@@ -158,7 +158,8 @@ class Pos extends MY_Controller
         }
 
         if ($this->form_validation->run() == true) {
-            $data = ['title'    => $this->input->post('title'),
+            $data = [
+                'title'    => $this->input->post('title'),
                 'type'          => $this->input->post('type'),
                 'profile'       => $this->input->post('profile'),
                 'char_per_line' => $this->input->post('char_per_line'),
@@ -379,6 +380,7 @@ class Pos extends MY_Controller
 
     public function delete($id = null)
     {
+        $this->owner_only();
         $this->sma->checkPermissions('index');
         if (!$id) {
             $this->sma->send_json(['error' => 1, 'msg' => lang('id_not_found')]);
@@ -440,7 +442,8 @@ class Pos extends MY_Controller
         }
 
         if ($this->form_validation->run() == true) {
-            $data = ['title'    => $this->input->post('title'),
+            $data = [
+                'title'    => $this->input->post('title'),
                 'type'          => $this->input->post('type'),
                 'profile'       => $this->input->post('profile'),
                 'char_per_line' => $this->input->post('char_per_line'),
@@ -528,10 +531,10 @@ class Pos extends MY_Controller
 
         $this->load->library('datatables');
         $this->datatables
-        ->select('id, title, type, profile, path, ip_address, port')
-        ->from('printers')
-        ->add_column('Actions', "<div class='text-center'> <a href='" . admin_url('pos/edit_printer/$1') . "' class='btn-warning btn-xs tip' title='" . lang('edit_printer') . "'><i class='fa fa-edit'></i></a> <a href='#' class='btn-danger btn-xs tip po' title='<b>" . lang('delete_printer') . "</b>' data-content=\"<p>" . lang('r_u_sure') . "</p><a class='btn btn-danger po-delete' href='" . admin_url('pos/delete_printer/$1') . "'>" . lang('i_m_sure') . "</a> <button class='btn po-close'>" . lang('no') . "</button>\"  rel='popover'><i class=\"fa fa-trash-o\"></i></a></div>", 'id')
-        ->unset_column('id');
+            ->select('id, title, type, profile, path, ip_address, port')
+            ->from('printers')
+            ->add_column('Actions', "<div class='text-center'> <a href='" . admin_url('pos/edit_printer/$1') . "' class='btn-warning btn-xs tip' title='" . lang('edit_printer') . "'><i class='fa fa-edit'></i></a> <a href='#' class='btn-danger btn-xs tip po' title='<b>" . lang('delete_printer') . "</b>' data-content=\"<p>" . lang('r_u_sure') . "</p><a class='btn btn-danger po-delete' href='" . admin_url('pos/delete_printer/$1') . "'>" . lang('i_m_sure') . "</a> <button class='btn po-close'>" . lang('no') . "</button>\"  rel='popover'><i class=\"fa fa-trash-o\"></i></a></div>", 'id')
+            ->unset_column('id');
         echo $this->datatables->generate();
     }
 
@@ -911,7 +914,8 @@ class Pos extends MY_Controller
                 $round_total = $this->sma->roundNumber($grand_total, $this->pos_settings->rounding);
                 $rounding    = $this->sma->formatMoney($round_total - $grand_total);
             }
-            $data = ['date'         => $date,
+            $data = [
+                'date'         => $date,
                 'customer_id'       => $customer_id,
                 'customer'          => $customer,
                 'biller_id'         => $biller_id,
@@ -1133,13 +1137,15 @@ class Pos extends MY_Controller
                     $tax_rate = $this->site->getTaxRateByID($row->tax_rate);
                     $ri       = $this->Settings->item_addition ? $row->id : $c;
 
-                    $pr[$ri] = ['id' => $c, 'item_id' => $row->id, 'label' => $row->name . ' (' . $row->code . ')',
-                        'row'        => $row, 'combo_items' => $combo_items, 'tax_rate' => $tax_rate, 'units' => $units, 'options' => $options, ];
+                    $pr[$ri] = [
+                        'id' => $c, 'item_id' => $row->id, 'label' => $row->name . ' (' . $row->code . ')',
+                        'row'        => $row, 'combo_items' => $combo_items, 'tax_rate' => $tax_rate, 'units' => $units, 'options' => $options,
+                    ];
                     $c++;
                 }
 
                 $this->data['items'] = json_encode($pr);
-            // $this->sma->print_arrays($this->data['items']);
+                // $this->sma->print_arrays($this->data['items']);
             } else {
                 $this->data['customer']       = $this->pos_model->getCompanyByID($this->pos_settings->default_customer);
                 $this->data['reference_note'] = null;
@@ -1638,7 +1644,7 @@ class Pos extends MY_Controller
     }
 
 
-    public function myreport()
+    public function myreport1()
     {
         $this->sma->checkPermissions('index', TRUE);
 
@@ -1650,26 +1656,27 @@ class Pos extends MY_Controller
 
         if (!$this->Owner && !$this->Admin) {
             $user_id = $this->session->userdata('user_id');
-        }
-
-        else 
+        } else
             $user_id = null;
 
         $this->data['error'] = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
 
 
-        
-            $this->data['users'] = $this->reports_model->getStaff();
-        
-            $this->data['user_id'] = $user_id;
 
-            $this->data['warehouse'] = $this->site->getWarehouseByID($this->Settings->default_warehouse ? $this->Settings->default_warehouse : 1);
-            
+        $this->data['users'] = $this->reports_model->getStaff();
 
-           // $this->sma->print_arrays($this->data);
+        $this->data['user_id'] = $user_id;
 
-           $this->data['modal_js'] = $this->site->modal_js();
-           
+        $this->data['warehouse'] = $this->site->getWarehouseByID($this->Settings->default_warehouse ? $this->Settings->default_warehouse : 1);
+
+
+        // $this->sma->print_arrays($this->data);
+
+        $this->data['modal_js'] = $this->site->modal_js();
+
+        // $this->sma->print_arrays($this->data['modal_js']);
+
+
         $this->load->view($this->theme . 'reports/users_report', $this->data);
     }
 }

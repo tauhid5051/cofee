@@ -1,9 +1,13 @@
 <?php
 
+use PHPJasper\PHPJasper;
+
 defined('BASEPATH') or exit('No direct script access allowed');
+
 
 class Reports extends MY_Controller
 {
+    private $PHPJasper;
     public function __construct()
     {
         parent::__construct();
@@ -16,6 +20,7 @@ class Reports extends MY_Controller
         $this->lang->admin_load('reports', $this->Settings->user_language);
         $this->load->library('form_validation');
         $this->load->admin_model('reports_model');
+        $this->PHPJasper = new PHPJasper();
         $this->data['pb'] = [
             'cash'       => lang('cash'),
             'CC'         => lang('CC'),
@@ -3210,40 +3215,6 @@ class Reports extends MY_Controller
         $today_end = date("Y-m-d", strtotime($today . ' +1 day'));
 
 
-        // first query  LEFT JOIN sma_payments ON sma_payments.`sale_id` = sma_sales.`id` 
-        // SELECT sma_users.`first_name`, sma_users.`last_name`, COUNT(sma_payments.sale_id) AS total_invoice, SUM(sma_sales.grand_total) AS total_amount, SUM(sma_payments.`amount`) AS paid, SUM( CASE WHEN sma_payments.`paid_by` = 'cash' THEN sma_payments.`amount` ELSE 0 END ) cash, SUM(sma_sales.grand_total) - SUM(sma_sales.paid) AS balance FROM `sma_users
-
-
-        //         SELECT b.created_by,
-        // CONCAT(TRIM(sma_users.first_name),' ',TRIM(sma_users.last_name)) NAME,
-        // SUM(b.total) total, SUM(b.grand_total) grand_total,SUM(b.total_bill) total_bill,SUM(b.total_discount) total_discount,SUM(b.total_adjust) total_adjust,SUM(b.total_shipping) total_shipping,SUM(b.total_received) total_received 
-        // FROM (
-        // 	SELECT 0 total, 0 grand_total,0 total_bill,0 total_discount,0 total_adjust,0 total_shipping,created_by,SUM(amount) AS total_received
-        //  FROM sma_payments WHERE DATE(`date`) BETWEEN '2022-10-04'  AND   '2022-10-04' -- AND  created_by 
-        //  GROUP BY created_by 
-        //  UNION ALL 
-        //  SELECT a.*,0 total_received FROM (SELECT SUM(total) total, SUM(grand_total) AS grand_total,COUNT(id) AS total_bill, SUM(order_discount) AS total_discount, SUM(adjust) AS total_adjust, SUM(shipping) AS total_shipping,created_by 
-        //  FROM `sma_sales` WHERE DATE(`sma_sales`.`date`) BETWEEN  '2022-10-04'  AND   '2022-10-04'    GROUP BY `created_by`) AS a INNER JOIN sma_users ON a.created_by = sma_users.id
-        // )b,sma_users WHERE sma_users.id=b.created_by GROUP BY b.created_by
-        // ORDER BY CONCAT(sma_users.first_name,sma_users.last_name) ASC
-
-
-
-        // SELECT CONCAT(`first_name`,' ',COALESCE(`last_name`,'')) user_name, paid_by ,SUM(amount) AS total_received
-        // FROM sma_payments p
-        // LEFT JOIN sma_users ON sma_users.id=p.created_by
-
-        // WHERE DATE(`date`) BETWEEN '2022-10-04'  AND   '2022-10-04' -- AND p.created_by = 
-        //  GROUP BY created_by,paid_by
-
-
-
-
-
-        // SELECT b.created_by, CONCAT(TRIM(sma_users.first_name),' ',TRIM(sma_users.last_name)) NAME, SUM(b.total) total, SUM(b.grand_total) grand_total,SUM(b.total_bill) total_bill,SUM(b.total_discount) total_discount,SUM(b.total_adjust) total_adjust,SUM(b.total_shipping) total_shipping,SUM(b.total_received) total_received FROM ( SELECT 0 total, 0 grand_total,0 total_bill,0 total_discount,0 total_adjust,0 total_shipping,created_by,SUM(amount) AS total_received FROM sma_payments WHERE DATE(`date`) BETWEEN '2022-10-04'  AND   '2022-10-04'  AND  created_by = 5 GROUP BY created_by UNION ALL SELECT a.*,0 total_received FROM (SELECT SUM(total) total, SUM(grand_total) AS grand_total,COUNT(id) AS total_bill, SUM(order_discount) AS total_discount, SUM(adjust) AS total_adjust, SUM(shipping) AS total_shipping,created_by FROM `sma_sales` WHERE DATE(`date`) BETWEEN '2022-10-04'  AND   '2022-10-04'  AND  created_by = 5   GROUP BY `created_by`) AS a INNER JOIN sma_users ON a.created_by = sma_users.id )b,sma_users WHERE sma_users.id=b.created_by GROUP BY b.created_by ORDER BY CONCAT(sma_users.first_name,sma_users.last_name) ASC
-
-
-
         $this->db->select("sma_users.`first_name`, sma_users.`last_name`, COUNT(sma_payments.sale_id) AS total_invoice, SUM(sma_sales.grand_total) AS total_amount, SUM(sma_payments.`amount`) AS paid, SUM( CASE WHEN sma_payments.`paid_by` = 'cash' THEN sma_payments.`amount` ELSE 0 END ) cash, SUM(sma_sales.grand_total) - SUM(sma_sales.paid) AS balance", false)
             ->from('sma_users')
             ->join('sma_sales', '`sma_users`.`id` = sma_sales.`created_by`', 'left')
@@ -3275,160 +3246,82 @@ class Reports extends MY_Controller
 
         //    $this->print_arrays( $this->session);
 
-        $this->page_construct('reports/userWiseCollection', $meta, $this->data);
+        $this->page_construct('reports/userWiseCollection1', $meta, $this->data);
     }
+
+
 
 
     public function UserWiseCollection()
     {
-        //  $this->print_arrays($this->input->post());
 
-        $this->sma->checkPermissions('customers');
-        $this->data['error'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('error');
-
-        $bc   = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('reports'), 'page' => lang('reports')], ['link' => '#', 'page' => lang('User Wise Collection')]];
-        $meta = ['page_title' => lang('User Wise Collection'), 'bc' => $bc];
-
-        $this->data['products'] = [];
-        $this->data['customers'] = [];
-        $this->data['allStaff']      = $this->reports_model->getStaff();
-        $this->data['categories'] = $this->site->getAllCategories();
-
-        $customer      = $this->input->post('customer') ? $this->input->post('customer') : null;
-        $start_date      = $this->input->post('start_date') ? $this->input->post('start_date') : null;
-        $end_date      = $this->input->post('end_date') ? $this->input->post('end_date') : null;
-
-        if ($start_date) {
-            $start_date = $this->input->post('start_date');
-            $start_date = str_replace('/', '-', $start_date);
-            $start_date = date("Y-m-d", strtotime($start_date));
-        }
-        if ($end_date) {
-            $end_date = $this->input->post('end_date');
-            $end_date = str_replace('/', '-', $end_date);
-            $end_date = date("Y-m-d", strtotime($end_date . ' +1 day'));
-        }
-
-        $today = date("Y-m-d");
-        $today_end = date("Y-m-d", strtotime($today . ' +1 day'));
+        $this->load->database();  //load the driver first
+        $mysqlUserName      = $this->db->username;
+        $mysqlPassword      = $this->db->password;
+        $mysqlHostName      = $this->db->hostname;
+        $DbName             = $this->db->database;
 
 
-        // first query  LEFT JOIN sma_payments ON sma_payments.`sale_id` = sma_sales.`id` 
-        // SELECT sma_users.`first_name`, sma_users.`last_name`, COUNT(sma_payments.sale_id) AS total_invoice, SUM(sma_sales.grand_total) AS total_amount, SUM(sma_payments.`amount`) AS paid, SUM( CASE WHEN sma_payments.`paid_by` = 'cash' THEN sma_payments.`amount` ELSE 0 END ) cash, SUM(sma_sales.grand_total) - SUM(sma_sales.paid) AS balance FROM `sma_users
+        // $this->listParametersExample();
+
+        $input = FCPATH . 'assets/jasper/compiled/paymentSummeryReport.jasper';
+        $output = FCPATH . 'assets/jasper/output';
+
+        $this->print_arrays($mysqlUserName);
 
 
-        //         SELECT b.created_by,
-        // CONCAT(TRIM(sma_users.first_name),' ',TRIM(sma_users.last_name)) NAME,
-        // SUM(b.total) total, SUM(b.grand_total) grand_total,SUM(b.total_bill) total_bill,SUM(b.total_discount) total_discount,SUM(b.total_adjust) total_adjust,SUM(b.total_shipping) total_shipping,SUM(b.total_received) total_received 
-        // FROM (
-        // 	SELECT 0 total, 0 grand_total,0 total_bill,0 total_discount,0 total_adjust,0 total_shipping,created_by,SUM(amount) AS total_received
-        //  FROM sma_payments WHERE DATE(`date`) BETWEEN '2022-10-04'  AND   '2022-10-04' -- AND  created_by 
-        //  GROUP BY created_by 
-        //  UNION ALL 
-        //  SELECT a.*,0 total_received FROM (SELECT SUM(total) total, SUM(grand_total) AS grand_total,COUNT(id) AS total_bill, SUM(order_discount) AS total_discount, SUM(adjust) AS total_adjust, SUM(shipping) AS total_shipping,created_by 
-        //  FROM `sma_sales` WHERE DATE(`sma_sales`.`date`) BETWEEN  '2022-10-04'  AND   '2022-10-04'    GROUP BY `created_by`) AS a INNER JOIN sma_users ON a.created_by = sma_users.id
-        // )b,sma_users WHERE sma_users.id=b.created_by GROUP BY b.created_by
-        // ORDER BY CONCAT(sma_users.first_name,sma_users.last_name) ASC
+        $options = [
+            'format' => ['pdf'],
+            'locale' => 'en',
+            // 'params' => [],
+            'params' => [
+                'startDate' => $this->input->get('startDate'),
+                'createdBy' => $this->input->get('createdBy'),
+                'endDate' => $this->input->get('endDate'),
+                'address' => $this->input->get('branchAddress'),
+                'branchName' => $this->data['Settings']->site_name,
+                //'SUBREPORT_DIR' => FCPATH . 'assets/jasper/resources',
+            ],
+            'resources' => FCPATH . 'assets/jasper/resources', //place of resources
+            'db_connection' => [
+                'driver' => 'mysql', //mysql, postgres, oracle, generic (jdbc)
+                'username' => 'jasper',
+                'password' => 'dmRokon123',
+                'host' => 'localhost',
+                'database' => 'coffee',
+                'port' => '3306'
+            ]
+        ];
+
+        $this->PHPJasper->process(
+            $input,
+            $output,
+            $options
+        )->execute();
 
 
 
-        // SELECT CONCAT(`first_name`,' ',COALESCE(`last_name`,'')) user_name, paid_by ,SUM(amount) AS total_received
-        // FROM sma_payments p
-        // LEFT JOIN sma_users ON sma_users.id=p.created_by
+        $filename =  "assets/jasper/output/paymentSummeryReport.pdf";
 
-        // WHERE DATE(`date`) BETWEEN '2022-10-04'  AND   '2022-10-04' -- AND p.created_by = 
-        //  GROUP BY created_by,paid_by
-
-
-
-
-
-        /* SELECT b.created_by, CONCAT(TRIM(sma_users.first_name),' ',TRIM(sma_users.last_name)) NAME, SUM(b.total) total, SUM(b.grand_total) grand_total,SUM(b.total_bill) total_bill,SUM(b.total_discount) total_discount,SUM(b.total_adjust) total_adjust, SUM(b.total_shipping) total_shipping,SUM(b.total_received) total_received FROM ( 
-                SELECT 0 total, 0 grand_total,0 total_bill,0 total_discount,0 total_adjust,0 total_shipping,created_by, SUM(amount) AS total_received FROM sma_payments WHERE DATE(`date`) BETWEEN '2022-10-04'  AND   '2022-10-04'  AND  created_by = 5 GROUP BY created_by 
-                UNION ALL 
-                SELECT a.*,0 total_received FROM (SELECT SUM(total) total, SUM(grand_total) AS grand_total,COUNT(id) AS total_bill, SUM(order_discount) AS total_discount, SUM(adjust) AS total_adjust, SUM(shipping) AS total_shipping,created_by FROM `sma_sales` 
-                WHERE DATE(`date`) BETWEEN '2022-10-04'  AND   '2022-10-04'  AND  created_by = 5   GROUP BY `created_by`) AS a INNER JOIN sma_users ON a.created_by = sma_users.id 
-
-            ) b,sma_users  WHERE sma_users.id=b.created_by GROUP BY b.created_by ORDER BY CONCAT(sma_users.first_name,sma_users.last_name) ASC
-        */
-
-
-
-
-        if ($customer && $start_date && $end_date) {
-            $this->db->query("SELECT b.created_by, CONCAT(TRIM(sma_users.first_name),' ',TRIM(sma_users.last_name)) NAME, SUM(b.total) total, SUM(b.grand_total) grand_total,SUM(b.total_bill) total_bill,SUM(b.total_discount) total_discount,SUM(b.total_adjust) total_adjust, SUM(b.total_shipping) total_shipping,SUM(b.total_received) total_received FROM 
-            ( SELECT 0 total, 0 grand_total,0 total_bill,0 total_discount,0 total_adjust,0 total_shipping,created_by, SUM(amount) AS total_received FROM sma_payments 
-            WHERE DATE(`date`) BETWEEN   $start_date AND $end_date   AND  created_by = $customer GROUP BY created_by 
-            UNION ALL 
-            SELECT a.*,0 total_received FROM (SELECT SUM(total) total, SUM(grand_total) AS grand_total,COUNT(id) AS total_bill, SUM(order_discount) AS total_discount, SUM(adjust) AS total_adjust, SUM(shipping) AS total_shipping,created_by FROM `sma_sales`  
-            WHERE DATE(`date`) BETWEEN $start_date AND $end_date   AND  created_by = $customer   
-            GROUP BY `created_by`) AS a INNER JOIN sma_users ON a.created_by = sma_users.id 
-            )  b,sma_users  WHERE sma_users.id=b.created_by GROUP BY b.created_by ORDER BY CONCAT(sma_users.first_name,sma_users.last_name) ASC");
-        } else if ($start_date && $end_date) {
-            $this->db->query("SELECT b.created_by, CONCAT(TRIM(sma_users.first_name),' ',TRIM(sma_users.last_name)) NAME, SUM(b.total) total, SUM(b.grand_total) grand_total,SUM(b.total_bill) total_bill,SUM(b.total_discount) total_discount,SUM(b.total_adjust) total_adjust, SUM(b.total_shipping) total_shipping,SUM(b.total_received) total_received FROM 
-            ( SELECT 0 total, 0 grand_total,0 total_bill,0 total_discount,0 total_adjust,0 total_shipping,created_by, SUM(amount) AS total_received FROM sma_payments 
-            WHERE DATE(`date`) BETWEEN   $start_date AND $end_date   GROUP BY created_by 
-            UNION ALL 
-            SELECT a.*,0 total_received FROM (SELECT SUM(total) total, SUM(grand_total) AS grand_total,COUNT(id) AS total_bill, SUM(order_discount) AS total_discount, SUM(adjust) AS total_adjust, SUM(shipping) AS total_shipping,created_by FROM `sma_sales`  
-            WHERE DATE(`date`) BETWEEN $start_date AND $end_date     
-            GROUP BY `created_by`) AS a INNER JOIN sma_users ON a.created_by = sma_users.id 
-            )  b,sma_users  WHERE sma_users.id=b.created_by GROUP BY b.created_by ORDER BY CONCAT(sma_users.first_name,sma_users.last_name) ASC");
-        } else if ($customer) {
-            $this->db->query("SELECT b.created_by, CONCAT(TRIM(sma_users.first_name),' ',TRIM(sma_users.last_name)) NAME, SUM(b.total) total, SUM(b.grand_total) grand_total,SUM(b.total_bill) total_bill,SUM(b.total_discount) total_discount,SUM(b.total_adjust) total_adjust, SUM(b.total_shipping) total_shipping,SUM(b.total_received) total_received FROM 
-            ( SELECT 0 total, 0 grand_total,0 total_bill,0 total_discount,0 total_adjust,0 total_shipping,created_by, SUM(amount) AS total_received FROM sma_payments 
-            WHERE created_by = $customer GROUP BY created_by 
-            UNION ALL 
-            SELECT a.*,0 total_received FROM (SELECT SUM(total) total, SUM(grand_total) AS grand_total,COUNT(id) AS total_bill, SUM(order_discount) AS total_discount, SUM(adjust) AS total_adjust, SUM(shipping) AS total_shipping,created_by FROM `sma_sales`  
-            WHERE   created_by = $customer   
-            GROUP BY `created_by`) AS a INNER JOIN sma_users ON a.created_by = sma_users.id 
-            )  b,sma_users  WHERE sma_users.id=b.created_by GROUP BY b.created_by ORDER BY CONCAT(sma_users.first_name,sma_users.last_name) ASC");
-        } else {
-            $this->db->query("SELECT b.created_by, CONCAT(TRIM(sma_users.first_name),' ',TRIM(sma_users.last_name)) NAME, SUM(b.total) total, SUM(b.grand_total) grand_total,SUM(b.total_bill) total_bill,SUM(b.total_discount) total_discount,SUM(b.total_adjust) total_adjust, SUM(b.total_shipping) total_shipping,SUM(b.total_received) total_received FROM 
-            ( SELECT 0 total, 0 grand_total,0 total_bill,0 total_discount,0 total_adjust,0 total_shipping,created_by, SUM(amount) AS total_received FROM sma_payments            
-            UNION ALL 
-            SELECT a.*,0 total_received FROM (SELECT SUM(total) total, SUM(grand_total) AS grand_total,COUNT(id) AS total_bill, SUM(order_discount) AS total_discount, SUM(adjust) AS total_adjust, SUM(shipping) AS total_shipping,created_by FROM `sma_sales`  
-           GROUP BY `created_by`) AS a INNER JOIN sma_users ON a.created_by = sma_users.id 
-            )  b,sma_users  WHERE sma_users.id=b.created_by GROUP BY b.created_by ORDER BY CONCAT(sma_users.first_name,sma_users.last_name) ASC");
-        }
-
-
-        $this->print_arrays($this->db->last_query());
-
-
-        $this->db->select("sma_users.`first_name`, sma_users.`last_name`, COUNT(sma_payments.sale_id) AS total_invoice, SUM(sma_sales.grand_total) AS total_amount, SUM(sma_payments.`amount`) AS paid, SUM( CASE WHEN sma_payments.`paid_by` = 'cash' THEN sma_payments.`amount` ELSE 0 END ) cash, SUM(sma_sales.grand_total) - SUM(sma_sales.paid) AS balance", false)
-            ->from('sma_users')
-            ->join('sma_sales', '`sma_users`.`id` = sma_sales.`created_by`', 'left')
-            ->join('sma_payments', '`sma_payments`.`sale_id` = sma_sales.`id`', 'left')
-            ->group_by('`sma_users`.`id`');
-
-        if ($customer) {
-            $this->db->where('sma_sales.created_by', $customer);
-        }
-
-
-
-        if ($start_date && $end_date) {
-            $this->db->where('sma_payments.date BETWEEN "' . $start_date . '" and "' . $end_date . '"');
-        } else {
-            $this->db->where('sma_payments.date BETWEEN "' . $today . '" and "' . $today_end . '"');
-        }
-
-        $query = $this->db->get();
-        $this->data['records'] = $query->result_array();
-
-
-        $this->data['totalInvoice'] = array_sum(array_column($this->data['records'], 'total_invoice'));
-        $this->data['totalAmount'] = array_sum(array_column($this->data['records'], 'total_amount'));
-        $this->data['totalPaid'] = array_sum(array_column($this->data['records'], 'paid'));
-        $this->data['totalCash'] = array_sum(array_column($this->data['records'], 'cash'));
-        $this->data['totalBalance'] = array_sum(array_column($this->data['records'], 'balance'));
-
-        // $this->print_arrays($this->db->last_query());
-
-        //    $this->print_arrays( $this->session);
-
-        $this->page_construct('reports/userWiseCollection', $meta, $this->data);
+        redirect($filename);
     }
+
+
+
+
+
+    public function listParametersExample()
+    {
+        $input = FCPATH . 'assets/jasper/input/paymentSummeryReport.jrxml';
+        $output = $this->PHPJasper->listParameters($input)->execute();
+
+        foreach ($output as $parameter_description) {
+            print '<pre>' . $parameter_description . '</pre>';
+        }
+    }
+
+
+
 
     public function productReport()
     {
@@ -3479,28 +3372,19 @@ class Reports extends MY_Controller
         $query = $this->db->query("SELECT sma_products.id, sma_products.code, sma_products.name, PSales.supplier_id, PSales.supplier, COALESCE(PCosts.purchasedQty, 0) AS PurchasedQty, COALESCE(PSales.soldQty, 0) AS SoldQty, COALESCE(PCosts.balacneQty, 0) AS BalacneQty, COALESCE(PCosts.totalPurchase, 0) AS TotalPurchase, COALESCE(PCosts.balacneValue, 0) AS TotalBalance, COALESCE(PSales.totalSale, 0) AS TotalSales, ( COALESCE(PSales.totalSale, 0) - COALESCE(PCosts.totalPurchase, 0) ) AS Profit FROM `sma_products` LEFT JOIN (SELECT p.`supplier_id`, p.`supplier`, si.product_id, si.`purchase_id`, si.`purchase_item_id`, s.date AS DATE, s.created_by AS created_by, SUM(si.quantity) soldQty, SUM(si.quantity * si.sale_unit_price) totalSale FROM sma_costing si JOIN sma_sales s ON s.id = si.sale_id JOIN `sma_purchases` p ON si.`purchase_id` = p.`id` GROUP BY si.product_id , p.`supplier_id` ) PSales ON `sma_products`.`id` = `PSales`.`product_id` LEFT JOIN (SELECT product_id, p.date AS DATE, p.created_by AS created_by, SUM( CASE WHEN pi.purchase_id IS NOT NULL THEN quantity ELSE 0 END ) AS purchasedQty, SUM(quantity_balance) AS balacneQty, SUM(unit_cost * quantity_balance) balacneValue, SUM( ( CASE WHEN pi.purchase_id IS NOT NULL THEN (pi.subtotal) ELSE 0 END ) ) totalPurchase FROM sma_purchase_items PI LEFT JOIN sma_purchases p ON p.id = pi.purchase_id WHERE pi.status = 'received' GROUP BY pi.product_id, p.`supplier_id`) PCosts ON `sma_products`.`id` = `PCosts`.`product_id` WHERE `sma_products`.`type` != 'combo' GROUP BY `sma_products`.`id` ,   PSales.supplier_id ORDER BY PSales.supplier_id");
 
 
-
-
-
         // $array = $this->data['records'];
         $array = $query->result_array();
 
-
         // $this->print_arrays($array);
-
-
         $newArray = array();
         foreach ($array as $row) {
-
             // $this->print_arrays($row);
             $newArray[$row['supplier_id']][$row['id']] = $row;
         }
 
-
         $this->data['records'] = $newArray;
 
         // $this->print_ arrays($this->data['records']);
-
 
         // $this->data['totalInvoice'] = array_sum(array_column($this->data['records'], 'total_invoice'));
         // $this->data['totalAmount'] = array_sum(array_column($this->data['records'], 'total_amount'));
@@ -3510,7 +3394,7 @@ class Reports extends MY_Controller
 
         // $this->print_arrays($this->db->last_query());
 
-        $this->print_arrays($this->session);
+        // $this->print_arrays($this->session);
 
         $this->page_construct('reports/product_report', $meta, $this->data);
     }

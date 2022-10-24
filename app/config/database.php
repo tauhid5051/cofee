@@ -66,11 +66,12 @@ $query_builder = true;
 $db['default'] = [
     'dsn'          => '',
     'hostname'     => 'localhost',
-    'username'     => 'root',
-    'password'     => '',
+    'username'     => 'jasper',
+    'password'     => 'dmRokon123',
     'database'     => 'coffee',
     'dbdriver'     => 'mysqli',
     'dbprefix'     => 'sma_',
+    'port'         => '3306',
     'pconnect'     => false,
     'db_debug'     => true,
     'cache_on'     => false,
@@ -83,4 +84,15 @@ $db['default'] = [
     'stricton'     => false,
     'failover'     => [],
     'save_queries' => true,
+];
+
+
+$db['jasper'] = [
+    'driver' => 'mysql', //mysql, postgres, oracle, generic (jdbc)
+    'username' => 'jasper11111',
+    'password' => 'dmRokon123',
+    'host' => 'localhost',
+    'database' => 'coffee',
+    'port' => '3306'
+
 ];

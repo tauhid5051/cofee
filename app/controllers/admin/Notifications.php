@@ -41,7 +41,8 @@ class Notifications extends MY_Controller
             $this->session->set_flashdata('message', lang('notification_added'));
             admin_redirect('notifications');
         } else {
-            $this->data['comment'] = ['name' => 'comment',
+            $this->data['comment'] = [
+                'name' => 'comment',
                 'id'                         => 'comment',
                 'type'                       => 'textarea',
                 'class'                      => 'form-control',
@@ -57,6 +58,7 @@ class Notifications extends MY_Controller
 
     public function delete($id = null)
     {
+        $this->owner_only();
         if (!$this->Owner) {
             $this->session->set_flashdata('warning', lang('access_denied'));
             redirect($_SERVER['HTTP_REFERER']);
@@ -102,7 +104,8 @@ class Notifications extends MY_Controller
         } else {
             $comment = $this->cmt_model->getCommentByID($id);
 
-            $this->data['comment'] = ['name' => 'comment',
+            $this->data['comment'] = [
+                'name' => 'comment',
                 'id'                         => 'comment',
                 'type'                       => 'textarea',
                 'class'                      => 'form-control',

@@ -153,8 +153,14 @@
 
 
                             <li class="dropdown">
-                                <a class="btn bdarkGreen tip" title="<?= lang('User Wise Collection') ?>" data-placement="bottom" href="<?= admin_url('reports/UserWiseCollection') ?>">
+                                <a class="btn bdarkGreen tip" title="<?= lang('User Wise Collection') ?>" data-placement="bottom" href="<?= admin_url('reports/UserWiseCollection1') ?>">
                                     <i class="fa fa-money"></i> <span class="padding05"></span>
+                                </a>
+                            </li>
+
+                            <li class="dropdown">
+                                <a class="btn bdarkGreen pos-tip" title="<span><?= lang('My Report') ?></span>" data-placement="bottom" data-html="true" href="<?= admin_url('mis_reports/openModal') ?>" data-toggle="modal" data-target="#myModal">
+                                    My Report
                                 </a>
                             </li>
 

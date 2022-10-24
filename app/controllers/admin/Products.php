@@ -446,8 +446,10 @@ class Products extends MY_Controller
                         $row->serial = '';
                         $ri          = $this->Settings->item_addition ? $product->id : $c;
 
-                        $pr[$ri] = ['id' => $c, 'item_id' => $row->id, 'label' => $row->name . ' (' . $row->code . ')',
-                            'row'        => $row, 'options' => $options, ];
+                        $pr[$ri] = [
+                            'id' => $c, 'item_id' => $row->id, 'label' => $row->name . ' (' . $row->code . ')',
+                            'row'        => $row, 'options' => $options,
+                        ];
                         $c++;
                     }
                 }
@@ -834,6 +836,8 @@ class Products extends MY_Controller
 
     public function delete($id = null)
     {
+        $this->owner_only();
+
         $this->sma->checkPermissions(null, true);
 
         if ($this->input->get('id')) {
@@ -911,7 +915,8 @@ class Products extends MY_Controller
         $this->form_validation->set_rules('userfile', lang('product_gallery_images'), 'xss_clean');
 
         if ($this->form_validation->run('products/add') == true) {
-            $data = ['code'         => $this->input->post('code'),
+            $data = [
+                'code'         => $this->input->post('code'),
                 'barcode_symbology' => $this->input->post('barcode_symbology'),
                 'name'              => $this->input->post('name'),
                 'type'              => $this->input->post('type'),
@@ -1319,8 +1324,10 @@ class Products extends MY_Controller
                 $row->serial = $item->serial_no ? $item->serial_no : '';
                 $ri          = $this->Settings->item_addition ? $product->id : $c;
 
-                $pr[$ri] = ['id' => $c, 'item_id' => $row->id, 'label' => $row->name . ' (' . $row->code . ')',
-                    'row'        => $row, 'options' => $options, ];
+                $pr[$ri] = [
+                    'id' => $c, 'item_id' => $row->id, 'label' => $row->name . ' (' . $row->code . ')',
+                    'row'        => $row, 'options' => $options,
+                ];
                 $c++;
             }
 
@@ -1532,20 +1539,20 @@ class Products extends MY_Controller
         $this->load->library('datatables');
         if ($warehouse_id) {
             $this->datatables
-            ->select($this->db->dbprefix('products') . ".id as productid, {$this->db->dbprefix('products')}.image as image, {$this->db->dbprefix('products')}.code as code, {$this->db->dbprefix('products')}.name as name, {$this->db->dbprefix('brands')}.name as brand, {$this->db->dbprefix('categories')}.name as cname, cost as cost, price as price, COALESCE(wp.quantity, 0) as quantity, {$this->db->dbprefix('units')}.code as unit, wp.rack as rack, alert_quantity", false)
-            ->from('products');
+                ->select($this->db->dbprefix('products') . ".id as productid, {$this->db->dbprefix('products')}.image as image, {$this->db->dbprefix('products')}.code as code, {$this->db->dbprefix('products')}.name as name, {$this->db->dbprefix('brands')}.name as brand, {$this->db->dbprefix('categories')}.name as cname, cost as cost, price as price, COALESCE(wp.quantity, 0) as quantity, {$this->db->dbprefix('units')}.code as unit, wp.rack as rack, alert_quantity", false)
+                ->from('products');
             if ($this->Settings->display_all_products) {
                 $this->datatables->join('warehouses_products wp', "wp.product_id=products.id AND wp.warehouse_id={$warehouse_id}", 'left');
-            // $this->datatables->join("( SELECT product_id, quantity, rack from {$this->db->dbprefix('warehouses_products')} WHERE warehouse_id = {$warehouse_id}) wp", 'products.id=wp.product_id', 'left');
+                // $this->datatables->join("( SELECT product_id, quantity, rack from {$this->db->dbprefix('warehouses_products')} WHERE warehouse_id = {$warehouse_id}) wp", 'products.id=wp.product_id', 'left');
             } else {
                 $this->datatables->join('warehouses_products wp', 'products.id=wp.product_id', 'left')
-                ->where('wp.warehouse_id', $warehouse_id)
-                ->where('wp.quantity !=', 0);
+                    ->where('wp.warehouse_id', $warehouse_id)
+                    ->where('wp.quantity !=', 0);
             }
             $this->datatables->join('categories', 'products.category_id=categories.id', 'left')
-            ->join('units', 'products.unit=units.id', 'left')
-            ->join('brands', 'products.brand=brands.id', 'left');
-        // ->group_by("products.id");
+                ->join('units', 'products.unit=units.id', 'left')
+                ->join('brands', 'products.brand=brands.id', 'left');
+            // ->group_by("products.id");
         } else {
             $this->datatables
                 ->select($this->db->dbprefix('products') . ".id as productid, {$this->db->dbprefix('products')}.image as image, {$this->db->dbprefix('products')}.code as code, {$this->db->dbprefix('products')}.name as name, {$this->db->dbprefix('brands')}.name as brand, {$this->db->dbprefix('categories')}.name as cname, cost as cost, price as price, COALESCE(quantity, 0) as quantity, {$this->db->dbprefix('units')}.code as unit, '' as rack, alert_quantity", false)
@@ -1565,12 +1572,12 @@ class Products extends MY_Controller
         }
         if ($supplier) {
             $this->datatables->group_start()
-            ->where('supplier1', $supplier)
-            ->or_where('supplier2', $supplier)
-            ->or_where('supplier3', $supplier)
-            ->or_where('supplier4', $supplier)
-            ->or_where('supplier5', $supplier)
-            ->group_end();
+                ->where('supplier1', $supplier)
+                ->or_where('supplier2', $supplier)
+                ->or_where('supplier3', $supplier)
+                ->or_where('supplier4', $supplier)
+                ->or_where('supplier5', $supplier)
+                ->group_end();
         }
         $this->datatables->add_column('Actions', $action, 'productid, image, code, name');
         echo $this->datatables->generate();
@@ -1758,7 +1765,8 @@ class Products extends MY_Controller
             }
 
             $this->data['error']    = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
-            $this->data['userfile'] = ['name' => 'userfile',
+            $this->data['userfile'] = [
+                'name' => 'userfile',
                 'id'                          => 'userfile',
                 'type'                        => 'text',
                 'value'                       => $this->form_validation->set_value('userfile'),
@@ -2211,8 +2219,10 @@ class Products extends MY_Controller
                 $row->option = $option_id;
                 $row->serial = '';
                 $c           = sha1(uniqid(mt_rand(), true));
-                $pr[]        = ['id' => $c, 'item_id' => $row->id, 'label' => $row->name . ' (' . $row->code . ')',
-                    'row'            => $row, 'options' => $options, ];
+                $pr[]        = [
+                    'id' => $c, 'item_id' => $row->id, 'label' => $row->name . ' (' . $row->code . ')',
+                    'row'            => $row, 'options' => $options,
+                ];
             }
             $this->sma->send_json($pr);
         } else {
@@ -2247,7 +2257,8 @@ class Products extends MY_Controller
         $this->form_validation->set_rules('rack', lang('rack_location'), 'trim|required');
 
         if ($this->form_validation->run() == true) {
-            $data = ['rack'    => $this->input->post('rack'),
+            $data = [
+                'rack'    => $this->input->post('rack'),
                 'product_id'   => $product_id,
                 'warehouse_id' => $warehouse_id,
             ];
@@ -2376,7 +2387,8 @@ class Products extends MY_Controller
             $this->session->set_flashdata('message', lang('price_updated'));
             admin_redirect('products');
         } else {
-            $this->data['userfile'] = ['name' => 'userfile',
+            $this->data['userfile'] = [
+                'name' => 'userfile',
                 'id'                          => 'userfile',
                 'type'                        => 'text',
                 'value'                       => $this->form_validation->set_value('userfile'),

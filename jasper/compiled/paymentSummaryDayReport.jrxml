@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="paymentSummeryReport" columnCount="2" pageWidth="595" pageHeight="842" columnWidth="277" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="07984d90-5f11-413f-8df6-6c4afb230a27">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="startDate" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="createdBy" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="endDate" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="address" class="java.lang.String"/>
+	<parameter name="branchName" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT   DATE(sma_payments.Date) Date,SUM(amount) PathologyPaid
+,0 ServicePaid,SUM(Amount) TotalAmount
+FROM sma_sales,sma_payments,sma_users
+WHERE sma_sales.id=sma_payments.sale_id AND sma_payments.created_by=sma_users.id
+AND DATE(sma_payments.Date) BETWEEN $P{startDate} AND  $P{endDate}
+AND sma_payments.created_by =(CASE WHEN $P{createdBy}='all' THEN sma_users.id ELSE $P{createdBy} END)
+GROUP BY  DATE(sma_payments.Date)]]>
+	</queryString>
+	<field name="Date" class="java.sql.Date"/>
+	<field name="PathologyPaid" class="java.math.BigDecimal"/>
+	<field name="ServicePaid" class="java.math.BigDecimal"/>
+	<field name="TotalAmount" class="java.math.BigDecimal"/>
+	<variable name="totalService" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{ServicePaid}]]></variableExpression>
+	</variable>
+	<variable name="totalPathology" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{PathologyPaid}]]></variableExpression>
+	</variable>
+	<variable name="totalCollection" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{TotalAmount}]]></variableExpression>
+	</variable>
+	<variable name="rowNo" class="java.lang.Integer" calculation="Count">
+		<variableExpression><![CDATA[$F{PathologyPaid}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="65" splitType="Stretch">
+			<textField>
+				<reportElement x="2" y="44" width="172" height="20" uuid="a65636cb-4f9a-4d5e-bfb7-90a21ef43a1e"/>
+				<textElement markup="none"/>
+				<textFieldExpression><![CDATA["Print Date: "+new SimpleDateFormat("dd/MMM/yyyy hh:mm a").format(new Date())]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="175" y="45" width="63" height="20" uuid="bed0bbd5-e916-4244-8f71-2439d759fafc"/>
+				<text><![CDATA[Date Range:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="238" y="45" width="200" height="20" uuid="18c41970-7a5e-4ec2-b23d-1a9eddbe499e"/>
+				<textFieldExpression><![CDATA[$P{startDate}+" to "+$P{endDate}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="1" y="28" width="554" height="14" uuid="3cc997b3-021e-4830-a142-cb33edbf5d4c"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Payment Summary Report(Date wise)]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="0" width="554" height="28" uuid="ea1d1ba9-e8c7-4799-96ac-3816a3620e05"/>
+				<textElement textAlignment="Center">
+					<font size="18" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{branchName}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="21" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Opaque" x="157" y="1" width="121" height="20" forecolor="#FFFFFF" backcolor="#000000" uuid="f3f64139-460d-4949-98dc-6b045572116e"/>
+				<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="2" y="1" width="155" height="20" forecolor="#FFFFFF" backcolor="#000000" uuid="b9d1a68b-ea9f-4cd3-b220-d192d512b5ef"/>
+				<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5" lineColor="#000000"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Date]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="21" splitType="Stretch">
+			<textField pattern="#,##0">
+				<reportElement x="157" y="0" width="121" height="20" uuid="06ca3aa9-f1c9-459e-963a-127b2f91351a"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="0.25"/>
+					<leftPen lineWidth="0.25"/>
+					<bottomPen lineWidth="0.25"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{TotalAmount}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd MMMMM yyyy">
+				<reportElement x="2" y="0" width="155" height="20" uuid="2794fda6-15c7-4022-b72a-12db0c36c665"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{Date}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="20">
+			<staticText>
+				<reportElement x="2" y="0" width="47" height="20" uuid="7cdd7310-9b1e-43ae-bf5d-3a5df1f3a3b2"/>
+				<box leftPadding="3">
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total]]></text>
+			</staticText>
+			<textField evaluationTime="Report" pattern="#,##0" isBlankWhenNull="true">
+				<reportElement x="49" y="0" width="108" height="20" uuid="51283cb0-e645-4727-bda0-db923fc8e2e4"/>
+				<box leftPadding="3" rightPadding="3">
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true" isItalic="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{rowNo}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0">
+				<reportElement x="157" y="0" width="121" height="20" uuid="64cc1e18-d3cc-4e6c-9124-191c2508f626"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.25"/>
+				</box>
+				<textElement>
+					<font isBold="true" isItalic="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{totalCollection}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+</jasperReport>

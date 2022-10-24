@@ -143,7 +143,8 @@ class Transfers extends MY_Controller
             }
 
             $grand_total = $this->sma->formatDecimal(($total + $shipping + $product_tax), 4);
-            $data        = ['transfer_no' => $transfer_no,
+            $data        = [
+                'transfer_no' => $transfer_no,
                 'date'                    => $date,
                 'from_warehouse_id'       => $from_warehouse,
                 'from_warehouse_code'     => $from_warehouse_code,
@@ -177,12 +178,14 @@ class Transfers extends MY_Controller
         } else {
             $this->data['error'] = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
 
-            $this->data['name'] = ['name' => 'name',
+            $this->data['name'] = [
+                'name' => 'name',
                 'id'                      => 'name',
                 'type'                    => 'text',
                 'value'                   => $this->form_validation->set_value('name'),
             ];
-            $this->data['quantity'] = ['name' => 'quantity',
+            $this->data['quantity'] = [
+                'name' => 'quantity',
                 'id'                          => 'quantity',
                 'type'                        => 'text',
                 'value'                       => $this->form_validation->set_value('quantity'),
@@ -227,6 +230,8 @@ class Transfers extends MY_Controller
 
     public function delete($id = null)
     {
+        $this->owner_only();
+
         $this->sma->checkPermissions(null, true);
 
         if ($this->input->get('id')) {
@@ -359,7 +364,8 @@ class Transfers extends MY_Controller
             }
 
             $grand_total = $this->sma->formatDecimal(($total + $shipping + $product_tax), 4);
-            $data        = ['transfer_no' => $transfer_no,
+            $data        = [
+                'transfer_no' => $transfer_no,
                 'date'                    => $date,
                 'from_warehouse_id'       => $from_warehouse,
                 'from_warehouse_code'     => $from_warehouse_code,
@@ -446,8 +452,10 @@ class Transfers extends MY_Controller
                 $tax_rate = $this->site->getTaxRateByID($row->tax_rate);
                 $ri       = $this->Settings->item_addition ? $row->id : $c;
 
-                $pr[$ri] = ['id' => $c, 'item_id' => $row->id, 'label' => $row->name . ' (' . $row->code . ')',
-                    'row'        => $row, 'tax_rate' => $tax_rate, 'units' => $units, 'options' => $options, ];
+                $pr[$ri] = [
+                    'id' => $c, 'item_id' => $row->id, 'label' => $row->name . ' (' . $row->code . ')',
+                    'row'        => $row, 'tax_rate' => $tax_rate, 'units' => $units, 'options' => $options,
+                ];
                 $c++;
             }
 
@@ -526,12 +534,14 @@ class Transfers extends MY_Controller
             } else {
                 $transfer_temp = file_get_contents('./themes/default/admin/views/email_templates/transfer.html');
             }
-            $this->data['subject'] = ['name' => 'subject',
+            $this->data['subject'] = [
+                'name' => 'subject',
                 'id'                         => 'subject',
                 'type'                       => 'text',
                 'value'                      => $this->form_validation->set_value('subject', lang('transfer_order') . ' (' . $transfer->transfer_no . ') ' . lang('from') . ' ' . $transfer->from_warehouse_name),
             ];
-            $this->data['note'] = ['name' => 'note',
+            $this->data['note'] = [
+                'name' => 'note',
                 'id'                      => 'note',
                 'type'                    => 'text',
                 'value'                   => $this->form_validation->set_value('note', $transfer_temp),
@@ -710,8 +720,10 @@ class Transfers extends MY_Controller
                     $row->qty = ($bprice ? $bprice / $row->cost : 1);
                 }
 
-                $pr[] = ['id' => sha1($c . $r), 'item_id' => $row->id, 'label' => $row->name . ' (' . $row->code . ')',
-                    'row'     => $row, 'tax_rate' => $tax_rate, 'units' => $units, 'options' => $options, ];
+                $pr[] = [
+                    'id' => sha1($c . $r), 'item_id' => $row->id, 'label' => $row->name . ' (' . $row->code . ')',
+                    'row'     => $row, 'tax_rate' => $tax_rate, 'units' => $units, 'options' => $options,
+                ];
                 $r++;
             }
             $this->sma->send_json($pr);
@@ -933,7 +945,8 @@ class Transfers extends MY_Controller
                 krsort($products);
             }
             $grand_total = $total + $shipping + $product_tax;
-            $data        = ['transfer_no' => $transfer_no,
+            $data        = [
+                'transfer_no' => $transfer_no,
                 'date'                    => $date,
                 'from_warehouse_id'       => $from_warehouse,
                 'from_warehouse_code'     => $from_warehouse_code,
@@ -967,12 +980,14 @@ class Transfers extends MY_Controller
         } else {
             $this->data['error'] = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
 
-            $this->data['name'] = ['name' => 'name',
+            $this->data['name'] = [
+                'name' => 'name',
                 'id'                      => 'name',
                 'type'                    => 'text',
                 'value'                   => $this->form_validation->set_value('name'),
             ];
-            $this->data['quantity'] = ['name' => 'quantity',
+            $this->data['quantity'] = [
+                'name' => 'quantity',
                 'id'                          => 'quantity',
                 'type'                        => 'text',
                 'value'                       => $this->form_validation->set_value('quantity'),
