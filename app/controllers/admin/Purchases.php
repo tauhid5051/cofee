@@ -457,7 +457,7 @@ class Purchases extends MY_Controller
 
     /* --------------------------------------------------------------------------- */
 
-    public function delete($id = null)
+    public function delete1($id = null)
     {
         $this->owner_only();
 
@@ -1041,7 +1041,7 @@ class Purchases extends MY_Controller
 
         if ($this->form_validation->run() == true) {
             if (!empty($_POST['val'])) {
-                if ($this->input->post('form_action') == 'delete') {
+                if ($this->input->post('form_action') == 'delete1') {
                     $this->sma->checkPermissions('delete');
                     foreach ($_POST['val'] as $id) {
                         $this->purchases_model->deleteExpense($id);
@@ -1361,7 +1361,7 @@ class Purchases extends MY_Controller
 
         if ($this->form_validation->run() == true) {
             if (!empty($_POST['val'])) {
-                if ($this->input->post('form_action') == 'delete') {
+                if ($this->input->post('form_action') == 'delete1') {
                     $this->sma->checkPermissions('delete');
                     foreach ($_POST['val'] as $id) {
                         $this->purchases_model->deletePurchase($id);
@@ -1636,7 +1636,7 @@ class Purchases extends MY_Controller
         $purchase = $this->purchases_model->getPurchaseByID($id);
         if ($purchase->return_id) {
             $this->session->set_flashdata('error', lang('purchase_already_returned'));
-            redirect($_SERVER['HTTP_REFERER']);
+            // redirect($_SERVER['HTTP_REFERER']);
         }
         $this->form_validation->set_rules('return_surcharge', lang('return_surcharge'), 'required');
 

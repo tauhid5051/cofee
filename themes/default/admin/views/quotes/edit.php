@@ -142,7 +142,7 @@ $allow_discount = ($Owner || $Admin || $this->session->userdata('allow_discount'
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <?= lang('date', 'qudate'); ?>
-                                    <?php echo form_input('date', (isset($_POST['date']) ? $_POST['date'] : ''), 'class="form-control input-tip datetime" id="qudate" required="required"'); ?>
+                                    <?php echo form_input('date', (isset($_POST['date']) ? $_POST['date'] : ''), 'class="form-control input-tip datetime"  readonly id="qudate" required="required"'); ?>
                                 </div>
                             </div>
                         <?php

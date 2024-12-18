@@ -18,7 +18,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 | environments.
 |
 */
-$config['base_url'] = 'http://localhost/coffee/';
+$config['base_url'] = 'http://192.168.255.7/coffee/';
 
 
 // db for jasper

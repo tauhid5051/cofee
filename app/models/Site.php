@@ -1220,6 +1220,9 @@ class Site extends CI_Model
                     $quantity += $product->quantity;
                 }
                 $this->db->update('products', ['quantity' => $quantity], ['id' => $product_id]);
+
+                // $this->sma->print_arrays($this->db->last_query());
+
                 if ($product_variants = $this->getProductVariants($product_id)) {
                     foreach ($product_variants as $pv) {
                         $this->syncVariantQty($pv->id, $warehouse->id, $product_id);

@@ -159,7 +159,7 @@
                             </li>
 
                             <li class="dropdown">
-                                <a class="btn bdarkGreen pos-tip" title="<span><?= lang('My Report') ?></span>" data-placement="bottom" data-html="true" href="<?= admin_url('mis_reports/openModal') ?>" data-toggle="modal" data-target="#myModal">
+                                <a class="btn bdarkGreen pos-tip" title="<span><?= lang('My Report') ?></span>" data-placement="bottom" data-html="true" href="<?= admin_url('mis_reports/openModal/paymentSummeryReport/paymentSummerySubReport') ?>" data-toggle="modal" data-target="#myModal">
                                     My Report
                                 </a>
                             </li>

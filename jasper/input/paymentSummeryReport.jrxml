@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="paymentSummeryReport" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="82aebec1-a3b3-4c53-92f9-c5bfd31324d0">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="paymentSummeryReport" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
@@ -65,41 +65,41 @@ ORDER BY CONCAT(sma_users.first_name,sma_users.last_name) ASC]]>
 	<title>
 		<band height="65" splitType="Stretch">
 			<textField>
-				<reportElement x="2" y="44" width="172" height="20" uuid="83341b99-8159-438a-82d6-b2f7ab65e32f"/>
+				<reportElement x="2" y="44" width="172" height="20"/>
 				<textElement markup="none"/>
-				<textFieldExpression><![CDATA["Print Date: "+new SimpleDateFormat("dd/MMM/yyyy hh:mm a").format(new Date())]]></textFieldExpression>
+				<textFieldExpression class="java.lang.String"><![CDATA["Print Date: "+new SimpleDateFormat("dd/MMM/yyyy hh:mm a").format(new Date())]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="290" y="45" width="63" height="20" uuid="b132125c-800b-4c2c-b355-85ab27133674"/>
+				<reportElement x="290" y="45" width="63" height="20"/>
+				<textElement/>
 				<text><![CDATA[Date Range:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="353" y="45" width="200" height="20" uuid="a19cdda9-96c8-46f1-bf98-bac764e4f62b"/>
-				<textFieldExpression><![CDATA[$P{startDate} + " to "+ $P{endDate}]]></textFieldExpression>
+				<reportElement x="353" y="45" width="200" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{startDate}+" to "+$P{endDate}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="1" y="28" width="554" height="14" uuid="5ec8e96c-bf24-40e3-a935-dc62cd8d7211"/>
-				<textElement textAlignment="Right"/>
+				<reportElement x="1" y="28" width="554" height="14"/>
+				<textElement textAlignment="Center"/>
 				<text><![CDATA[Payment Summary Report						]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="0" y="0" width="554" height="14" uuid="d75ccb8c-a60d-4f6f-a52c-76d51c196d69"/>
-				<textElement textAlignment="Center">
-					<font size="12"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$P{branchName}]]></textFieldExpression>
+				<reportElement x="0" y="0" width="554" height="14"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{branchName}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="0" y="14" width="554" height="14" uuid="3890fb4e-287d-419f-ba2a-9a38a922bcf1"/>
+				<reportElement x="0" y="14" width="554" height="14"/>
 				<textElement textAlignment="Center" markup="html"/>
-				<textFieldExpression><![CDATA[$P{address}]]></textFieldExpression>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{address}]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>
 	<columnHeader>
 		<band height="21" splitType="Stretch">
 			<staticText>
-				<reportElement mode="Opaque" x="2" y="1" width="132" height="20" forecolor="#FFFFFF" backcolor="#000000" uuid="3b468d98-a48a-475a-adb5-1e787187ae99"/>
+				<reportElement mode="Opaque" x="2" y="1" width="132" height="20" forecolor="#FFFFFF" backcolor="#000000"/>
 				<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
 					<topPen lineWidth="0.5"/>
 					<leftPen lineWidth="0.5"/>
@@ -112,7 +112,7 @@ ORDER BY CONCAT(sma_users.first_name,sma_users.last_name) ASC]]>
 				<text><![CDATA[Name]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="135" y="1" width="82" height="20" forecolor="#FFFFFF" backcolor="#000000" uuid="c6ca51a4-d200-4ae7-b32d-a766f38a110f"/>
+				<reportElement mode="Opaque" x="135" y="1" width="82" height="20" forecolor="#FFFFFF" backcolor="#000000"/>
 				<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
 					<topPen lineWidth="0.5"/>
 					<leftPen lineWidth="0.5"/>
@@ -125,7 +125,7 @@ ORDER BY CONCAT(sma_users.first_name,sma_users.last_name) ASC]]>
 				<text><![CDATA[Bill Quantity]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="313" y="1" width="72" height="20" forecolor="#FFFFFF" backcolor="#000000" uuid="864d1a44-cfa2-4475-8866-a2d68e50a6c7"/>
+				<reportElement mode="Opaque" x="313" y="1" width="72" height="20" forecolor="#FFFFFF" backcolor="#000000"/>
 				<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
 					<topPen lineWidth="0.5"/>
 					<leftPen lineWidth="0.5"/>
@@ -138,7 +138,7 @@ ORDER BY CONCAT(sma_users.first_name,sma_users.last_name) ASC]]>
 				<text><![CDATA[Discount]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="484" y="1" width="71" height="20" forecolor="#FFFFFF" backcolor="#000000" uuid="c822ab9d-74cf-4ee9-a619-929aa2fc5cca"/>
+				<reportElement mode="Opaque" x="484" y="1" width="71" height="20" forecolor="#FFFFFF" backcolor="#000000"/>
 				<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
 					<topPen lineWidth="0.5"/>
 					<leftPen lineWidth="0.5"/>
@@ -151,7 +151,7 @@ ORDER BY CONCAT(sma_users.first_name,sma_users.last_name) ASC]]>
 				<text><![CDATA[Collection]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="217" y="1" width="96" height="20" forecolor="#FFFFFF" backcolor="#000000" uuid="c8a1840e-8ba3-4eed-a0a8-c0065d789fdc"/>
+				<reportElement mode="Opaque" x="217" y="1" width="96" height="20" forecolor="#FFFFFF" backcolor="#000000"/>
 				<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
 					<topPen lineWidth="0.5"/>
 					<leftPen lineWidth="0.5"/>
@@ -164,7 +164,7 @@ ORDER BY CONCAT(sma_users.first_name,sma_users.last_name) ASC]]>
 				<text><![CDATA[Total Amount]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="385" y="1" width="99" height="20" forecolor="#FFFFFF" backcolor="#000000" uuid="5b74dc6d-8ec5-4a51-a898-87d95603d73c"/>
+				<reportElement mode="Opaque" x="385" y="1" width="99" height="20" forecolor="#FFFFFF" backcolor="#000000"/>
 				<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
 					<topPen lineWidth="0.5"/>
 					<leftPen lineWidth="0.5"/>
@@ -181,36 +181,37 @@ ORDER BY CONCAT(sma_users.first_name,sma_users.last_name) ASC]]>
 	<detail>
 		<band height="20" splitType="Stretch">
 			<textField>
-				<reportElement x="2" y="0" width="132" height="20" uuid="bc7baa51-d4bd-4caa-a97e-bb4642196f80"/>
+				<reportElement x="2" y="0" width="132" height="20"/>
 				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
 					<topPen lineWidth="0.5"/>
 					<leftPen lineWidth="0.5"/>
 					<bottomPen lineWidth="0.5"/>
 				</box>
-				<textFieldExpression><![CDATA[$F{NAME}]]></textFieldExpression>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{NAME}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0">
-				<reportElement x="135" y="0" width="82" height="20" uuid="ab92c4c8-68e6-4e4e-ba33-09c9359a23a1"/>
+				<reportElement x="135" y="0" width="82" height="20"/>
 				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
 					<topPen lineWidth="0.5"/>
 					<leftPen lineWidth="0.5"/>
 					<bottomPen lineWidth="0.5"/>
 				</box>
 				<textElement textAlignment="Right"/>
-				<textFieldExpression><![CDATA[$F{total_bill}]]></textFieldExpression>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{total_bill}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00">
-				<reportElement x="217" y="0" width="96" height="20" uuid="861a138c-f957-4ae9-ac9a-85d814424043"/>
+				<reportElement x="217" y="0" width="96" height="20"/>
 				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
 					<topPen lineWidth="0.5"/>
 					<leftPen lineWidth="0.5"/>
 					<bottomPen lineWidth="0.5"/>
 				</box>
 				<textElement textAlignment="Right"/>
-				<textFieldExpression><![CDATA[$F{total}]]></textFieldExpression>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{total}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00">
-				<reportElement x="484" y="0" width="71" height="20" uuid="8a7b86b5-1657-49dd-be2b-5dfc4a60a140"/>
+				<reportElement x="484" y="0" width="71" height="20"/>
 				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
 					<topPen lineWidth="0.5"/>
 					<leftPen lineWidth="0.5"/>
@@ -218,52 +219,52 @@ ORDER BY CONCAT(sma_users.first_name,sma_users.last_name) ASC]]>
 					<rightPen lineWidth="0.5"/>
 				</box>
 				<textElement textAlignment="Right"/>
-				<textFieldExpression><![CDATA[$F{total_received}]]></textFieldExpression>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{total_received}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00">
-				<reportElement x="313" y="0" width="72" height="20" uuid="35be4c10-f42d-4b75-a1ec-062c89f0a4d4"/>
+				<reportElement x="313" y="0" width="72" height="20"/>
 				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
 					<topPen lineWidth="0.5"/>
 					<leftPen lineWidth="0.5"/>
 					<bottomPen lineWidth="0.5"/>
 				</box>
 				<textElement textAlignment="Right"/>
-				<textFieldExpression><![CDATA[$F{total_discount}]]></textFieldExpression>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{total_discount}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00">
-				<reportElement x="385" y="0" width="99" height="20" uuid="bc52b842-c197-461c-bf84-3720fe934769"/>
+				<reportElement x="385" y="0" width="99" height="20"/>
 				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
 					<topPen lineWidth="0.5"/>
 					<leftPen lineWidth="0.5"/>
 					<bottomPen lineWidth="0.5"/>
 				</box>
 				<textElement textAlignment="Right"/>
-				<textFieldExpression><![CDATA[$F{grand_total}]]></textFieldExpression>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{grand_total}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
 	<pageFooter>
 		<band height="22" splitType="Stretch">
 			<textField evaluationTime="Report">
-				<reportElement x="297" y="1" width="40" height="20" uuid="63d11da1-c2f2-4873-be38-5bfea0a25dd0"/>
+				<reportElement x="297" y="1" width="40" height="20"/>
 				<textElement>
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+				<textFieldExpression class="java.lang.String"><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="217" y="1" width="80" height="20" uuid="0f2f716a-9660-4188-b57c-480baf8920ca"/>
+				<reportElement x="217" y="1" width="80" height="20"/>
 				<textElement textAlignment="Right">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+				<textFieldExpression class="java.lang.String"><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
 			</textField>
 		</band>
 	</pageFooter>
 	<summary>
 		<band height="59" splitType="Stretch">
 			<textField pattern="#,##0.00">
-				<reportElement x="385" y="0" width="98" height="20" uuid="b68e23c4-2f67-4b9d-a9dd-0e8082041506"/>
+				<reportElement x="385" y="0" width="98" height="20"/>
 				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
 					<topPen lineWidth="0.5"/>
 					<leftPen lineWidth="0.5"/>
@@ -272,10 +273,10 @@ ORDER BY CONCAT(sma_users.first_name,sma_users.last_name) ASC]]>
 				<textElement textAlignment="Right">
 					<font isBold="true" isItalic="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$V{totalPayable}]]></textFieldExpression>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{totalPayable}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00">
-				<reportElement x="484" y="0" width="71" height="20" uuid="52cccce6-1d2b-44eb-9445-3de1489c9d92"/>
+				<reportElement x="484" y="0" width="71" height="20"/>
 				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
 					<topPen lineWidth="0.5"/>
 					<leftPen lineWidth="0.5"/>
@@ -285,10 +286,10 @@ ORDER BY CONCAT(sma_users.first_name,sma_users.last_name) ASC]]>
 				<textElement textAlignment="Right">
 					<font isBold="true" isItalic="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$V{totalCollection}]]></textFieldExpression>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{totalCollection}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00">
-				<reportElement x="217" y="0" width="97" height="20" uuid="0175061c-d995-40c5-9b4a-6e4bda7ea1b0"/>
+				<reportElement x="217" y="0" width="97" height="20"/>
 				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
 					<topPen lineWidth="0.0"/>
 					<leftPen lineWidth="0.5"/>
@@ -297,10 +298,10 @@ ORDER BY CONCAT(sma_users.first_name,sma_users.last_name) ASC]]>
 				<textElement textAlignment="Right">
 					<font isBold="true" isItalic="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$V{totalBillAmount}]]></textFieldExpression>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{totalBillAmount}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0">
-				<reportElement x="135" y="0" width="82" height="20" uuid="40112ea6-b087-4689-8510-30563a281394"/>
+				<reportElement x="135" y="0" width="82" height="20"/>
 				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
 					<topPen lineWidth="0.0"/>
 					<leftPen lineWidth="0.5"/>
@@ -309,10 +310,10 @@ ORDER BY CONCAT(sma_users.first_name,sma_users.last_name) ASC]]>
 				<textElement textAlignment="Right">
 					<font isBold="true" isItalic="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$V{totalBillNo}]]></textFieldExpression>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{totalBillNo}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="2" y="0" width="58" height="20" uuid="3f5f9d99-a4e0-419f-adaf-6f98f0c21c5a"/>
+				<reportElement x="2" y="0" width="58" height="20"/>
 				<box leftPadding="3">
 					<leftPen lineWidth="0.5"/>
 					<bottomPen lineWidth="0.5"/>
@@ -321,7 +322,7 @@ ORDER BY CONCAT(sma_users.first_name,sma_users.last_name) ASC]]>
 				<text><![CDATA[Total]]></text>
 			</staticText>
 			<textField evaluationTime="Report" pattern="#,##0" isBlankWhenNull="true">
-				<reportElement x="60" y="0" width="74" height="20" uuid="c7a26979-8aed-4ece-a79a-380ceebcf7af"/>
+				<reportElement x="60" y="0" width="74" height="20"/>
 				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
 					<topPen lineWidth="0.0"/>
 					<leftPen lineWidth="0.5"/>
@@ -330,10 +331,10 @@ ORDER BY CONCAT(sma_users.first_name,sma_users.last_name) ASC]]>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font isBold="true" isItalic="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$V{rowNo}]]></textFieldExpression>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{rowNo}]]></textFieldExpression>
 			</textField>
 			<subreport>
-				<reportElement x="2" y="20" width="551" height="39" uuid="163c7b26-ce90-4a29-85b3-ad388211da42"/>
+				<reportElement x="2" y="20" width="551" height="39"/>
 				<subreportParameter name="SUBREPORT_DIR">
 					<subreportParameterExpression><![CDATA[]]></subreportParameterExpression>
 				</subreportParameter>
@@ -347,10 +348,10 @@ ORDER BY CONCAT(sma_users.first_name,sma_users.last_name) ASC]]>
 					<subreportParameterExpression><![CDATA[$P{endDate}]]></subreportParameterExpression>
 				</subreportParameter>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression><![CDATA["paymentsummerysubReport.jasper"]]></subreportExpression>
+				<subreportExpression class="java.lang.String"><![CDATA["paymentSummerySubReport.jasper"]]></subreportExpression>
 			</subreport>
 			<textField pattern="#,##0.00">
-				<reportElement x="313" y="0" width="71" height="20" uuid="88d97bcb-819a-4436-be6f-6ceecc7d3532"/>
+				<reportElement x="313" y="0" width="71" height="20"/>
 				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
 					<topPen lineWidth="0.0"/>
 					<leftPen lineWidth="0.5"/>
@@ -359,7 +360,7 @@ ORDER BY CONCAT(sma_users.first_name,sma_users.last_name) ASC]]>
 				<textElement textAlignment="Right">
 					<font isBold="true" isItalic="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$V{totalDiscount}]]></textFieldExpression>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{totalDiscount}]]></textFieldExpression>
 			</textField>
 		</band>
 	</summary>

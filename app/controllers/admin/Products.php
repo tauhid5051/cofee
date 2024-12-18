@@ -637,7 +637,7 @@ class Products extends MY_Controller
 
         if ($this->form_validation->run() == true) {
             if (!empty($_POST['val'])) {
-                if ($this->input->post('form_action') == 'delete') {
+                if ($this->input->post('form_action') == 'delete1') {
                     $this->sma->checkPermissions('delete');
                     foreach ($_POST['val'] as $id) {
                         $this->products_model->deleteAdjustment($id);
@@ -834,8 +834,13 @@ class Products extends MY_Controller
 
     /* ------------------------------------------------------------------------------- */
 
-    public function delete($id = null)
+    public function delete1($id = null)
     {
+
+        $this->session->set_flashdata('warning', lang('access_denied'));
+        redirect($_SERVER['HTTP_REFERER']);
+
+
         $this->owner_only();
 
         $this->sma->checkPermissions(null, true);
@@ -919,6 +924,7 @@ class Products extends MY_Controller
                 'code'         => $this->input->post('code'),
                 'barcode_symbology' => $this->input->post('barcode_symbology'),
                 'name'              => $this->input->post('name'),
+                'is_active'         => $this->input->post('is_active'),
                 'type'              => $this->input->post('type'),
                 'brand'             => $this->input->post('brand'),
                 'category_id'       => $this->input->post('category'),
@@ -2038,7 +2044,7 @@ class Products extends MY_Controller
                     }
                     $this->session->set_flashdata('message', $this->lang->line('products_avg_cost_set'));
                     redirect($_SERVER['HTTP_REFERER']);
-                } elseif ($this->input->post('form_action') == 'delete') {
+                } elseif ($this->input->post('form_action') == 'delete1') {
                     $this->sma->checkPermissions('delete');
                     foreach ($_POST['val'] as $id) {
                         $this->products_model->deleteProduct($id);

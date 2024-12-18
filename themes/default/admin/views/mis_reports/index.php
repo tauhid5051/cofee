@@ -88,11 +88,11 @@
     <h2 class="text-bold">COLLECTION/PAYMENT REPORT:</h2>
     <div class="box-content" style="padding: 0px 0px 0px 20px; ">
         <div class="row">
-            <a class="btn  btn-outline-success" data-placement="bottom" data-html="true" href="<?= admin_url('mis_reports/openModal/paymentSummeryReport/paymentsummerysubreport') ?>" data-toggle="modal" data-target="#myModal">
+            <a class="btn  btn-outline-success" data-placement="bottom" data-html="true" href="<?= admin_url('mis_reports/openModal/paymentSummeryReport/paymentSummerySubReport') ?>" data-toggle="modal" data-target="#myModal">
                 User Collection
             </a>
             <a class="btn  btn-outline-success" data-placement="bottom" data-html="true" href="<?= admin_url('mis_reports/openModal/paymentSummaryDayReport') ?>" data-toggle="modal" data-target="#myModal">
-                Day Wise Collection
+                Date Wise Collection
             </a>
         </div>
 

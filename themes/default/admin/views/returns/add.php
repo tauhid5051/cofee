@@ -82,7 +82,7 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <?= lang('date', 'redate'); ?>
-                                    <?php echo form_input('date', (isset($_POST['date']) ? $_POST['date'] : ''), 'class="form-control input-tip datetime" id="redate" required="required"'); ?>
+                                    <?php echo form_input('date', (isset($_POST['date']) ? $_POST['date'] : ''), 'class="form-control input-tip datetime"  readonly id="redate" required="required"'); ?>
                                 </div>
                             </div>
                         <?php

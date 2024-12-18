@@ -494,7 +494,7 @@ class system_settings extends MY_Controller
 
         if ($this->form_validation->run() == true) {
             if (!empty($_POST['val'])) {
-                if ($this->input->post('form_action') == 'delete') {
+                if ($this->input->post('form_action') == 'delete1') {
                     foreach ($_POST['val'] as $id) {
                         $this->settings_model->deleteBrand($id);
                     }
@@ -557,7 +557,7 @@ class system_settings extends MY_Controller
 
         if ($this->form_validation->run() == true) {
             if (!empty($_POST['val'])) {
-                if ($this->input->post('form_action') == 'delete') {
+                if ($this->input->post('form_action') == 'delete1') {
                     foreach ($_POST['val'] as $id) {
                         $this->settings_model->deleteCategory($id);
                     }
@@ -741,7 +741,7 @@ class system_settings extends MY_Controller
 
         if ($this->form_validation->run() == true) {
             if (!empty($_POST['val'])) {
-                if ($this->input->post('form_action') == 'delete') {
+                if ($this->input->post('form_action') == 'delete1') {
                     foreach ($_POST['val'] as $id) {
                         $this->settings_model->deleteCurrency($id);
                     }
@@ -788,7 +788,7 @@ class system_settings extends MY_Controller
 
         if ($this->form_validation->run() == true) {
             if (!empty($_POST['val'])) {
-                if ($this->input->post('form_action') == 'delete') {
+                if ($this->input->post('form_action') == 'delete1') {
                     foreach ($_POST['val'] as $id) {
                         $this->settings_model->deleteCustomerGroup($id);
                     }
@@ -1577,7 +1577,7 @@ class system_settings extends MY_Controller
 
         if ($this->form_validation->run() == true) {
             if (!empty($_POST['val'])) {
-                if ($this->input->post('form_action') == 'delete') {
+                if ($this->input->post('form_action') == 'delete1') {
                     foreach ($_POST['val'] as $id) {
                         $this->settings_model->deleteCategory($id);
                     }
@@ -2450,7 +2450,7 @@ class system_settings extends MY_Controller
                     }
                     $this->session->set_flashdata('message', lang('products_group_price_updated'));
                     redirect($_SERVER['HTTP_REFERER']);
-                } elseif ($this->input->post('form_action') == 'delete') {
+                } elseif ($this->input->post('form_action') == 'delete1') {
                     foreach ($_POST['val'] as $id) {
                         $this->settings_model->deleteProductGroupPrice($id, $group_id);
                     }
@@ -2569,7 +2569,7 @@ class system_settings extends MY_Controller
 
         if ($this->form_validation->run() == true) {
             if (!empty($_POST['val'])) {
-                if ($this->input->post('form_action') == 'delete') {
+                if ($this->input->post('form_action') == 'delete1') {
                     foreach ($_POST['val'] as $id) {
                         $this->settings_model->deleteTaxRate($id);
                     }
@@ -2628,7 +2628,7 @@ class system_settings extends MY_Controller
 
         if ($this->form_validation->run() == true) {
             if (!empty($_POST['val'])) {
-                if ($this->input->post('form_action') == 'delete') {
+                if ($this->input->post('form_action') == 'delete1') {
                     foreach ($_POST['val'] as $id) {
                         $this->settings_model->deleteUnit($id);
                     }
@@ -2838,7 +2838,7 @@ class system_settings extends MY_Controller
 
         if ($this->form_validation->run() == true) {
             if (!empty($_POST['val'])) {
-                if ($this->input->post('form_action') == 'delete') {
+                if ($this->input->post('form_action') == 'delete1') {
                     foreach ($_POST['val'] as $id) {
                         $this->settings_model->deleteWarehouse($id);
                     }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="paymentSummeryReport" columnCount="2" pageWidth="595" pageHeight="842" columnWidth="277" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="07984d90-5f11-413f-8df6-6c4afb230a27">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="paymentSummeryReport" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="15aa4976-a516-4bb0-9f1a-4bb8d7a6639c">
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
@@ -45,27 +45,27 @@ GROUP BY  DATE(sma_payments.Date)]]>
 	<title>
 		<band height="65" splitType="Stretch">
 			<textField>
-				<reportElement x="2" y="44" width="172" height="20" uuid="a65636cb-4f9a-4d5e-bfb7-90a21ef43a1e"/>
+				<reportElement x="2" y="44" width="172" height="20" uuid="8dbc936b-8022-4a93-ae56-ab637b1439ca"/>
 				<textElement markup="none"/>
 				<textFieldExpression><![CDATA["Print Date: "+new SimpleDateFormat("dd/MMM/yyyy hh:mm a").format(new Date())]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="175" y="45" width="63" height="20" uuid="bed0bbd5-e916-4244-8f71-2439d759fafc"/>
+				<reportElement x="175" y="45" width="63" height="20" uuid="168d0580-cc71-4324-af82-3e23fda53e34"/>
 				<text><![CDATA[Date Range:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="238" y="45" width="200" height="20" uuid="18c41970-7a5e-4ec2-b23d-1a9eddbe499e"/>
+				<reportElement x="238" y="45" width="200" height="20" uuid="db439b3c-5fcc-470a-a743-3c682141a2d5"/>
 				<textFieldExpression><![CDATA[$P{startDate}+" to "+$P{endDate}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="1" y="28" width="554" height="14" uuid="3cc997b3-021e-4830-a142-cb33edbf5d4c"/>
+				<reportElement x="1" y="28" width="554" height="14" uuid="5b7e2514-d66b-486f-9f7d-6de597ee1c72"/>
 				<textElement textAlignment="Center"/>
 				<text><![CDATA[Payment Summary Report(Date wise)]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="0" y="0" width="554" height="28" uuid="ea1d1ba9-e8c7-4799-96ac-3816a3620e05"/>
+				<reportElement x="0" y="0" width="554" height="28" uuid="a0fe66eb-f550-454b-bb60-65508625f6b4"/>
 				<textElement textAlignment="Center">
-					<font size="18" isBold="true"/>
+					<font size="16" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$P{branchName}]]></textFieldExpression>
 			</textField>
@@ -74,20 +74,33 @@ GROUP BY  DATE(sma_payments.Date)]]>
 	<columnHeader>
 		<band height="21" splitType="Stretch">
 			<staticText>
-				<reportElement mode="Opaque" x="157" y="1" width="121" height="20" forecolor="#FFFFFF" backcolor="#000000" uuid="f3f64139-460d-4949-98dc-6b045572116e"/>
+				<reportElement mode="Opaque" x="157" y="1" width="140" height="20" forecolor="#FFFFFF" backcolor="#000000" uuid="9b71865e-910b-41e1-878e-34d3c63fa669"/>
 				<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
 					<topPen lineWidth="0.5"/>
 					<leftPen lineWidth="0.5"/>
 					<bottomPen lineWidth="0.5"/>
 					<rightPen lineWidth="0.25"/>
 				</box>
-				<textElement>
+				<textElement textAlignment="Center">
 					<font isBold="true"/>
 				</textElement>
 				<text><![CDATA[Total]]></text>
 			</staticText>
 			<staticText>
-				<reportElement mode="Opaque" x="2" y="1" width="155" height="20" forecolor="#FFFFFF" backcolor="#000000" uuid="b9d1a68b-ea9f-4cd3-b220-d192d512b5ef"/>
+				<reportElement mode="Opaque" x="297" y="1" width="141" height="20" forecolor="#FFFFFF" backcolor="#000000" uuid="7ca029ab-f291-4578-8d1a-a2bf12d99b69"/>
+				<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+					<topPen lineWidth="0.5"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+					<rightPen lineWidth="0.25" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Comments]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="2" y="1" width="155" height="20" forecolor="#FFFFFF" backcolor="#000000" uuid="0ac5aad6-cba1-4530-ab5d-15726147c80d"/>
 				<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
 					<topPen lineWidth="0.5"/>
 					<leftPen lineWidth="0.5" lineColor="#000000"/>
@@ -102,32 +115,66 @@ GROUP BY  DATE(sma_payments.Date)]]>
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="21" splitType="Stretch">
+		<band height="20" splitType="Stretch">
 			<textField pattern="#,##0">
-				<reportElement x="157" y="0" width="121" height="20" uuid="06ca3aa9-f1c9-459e-963a-127b2f91351a"/>
+				<reportElement x="157" y="0" width="140" height="20" uuid="f65e5f33-376e-454c-a4fb-1998ddb53063"/>
 				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
-					<topPen lineWidth="0.25"/>
-					<leftPen lineWidth="0.25"/>
-					<bottomPen lineWidth="0.25"/>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
 					<rightPen lineWidth="0.25"/>
 				</box>
+				<textElement textAlignment="Right"/>
 				<textFieldExpression><![CDATA[$F{TotalAmount}]]></textFieldExpression>
 			</textField>
 			<textField pattern="dd MMMMM yyyy">
-				<reportElement x="2" y="0" width="155" height="20" uuid="2794fda6-15c7-4022-b72a-12db0c36c665"/>
+				<reportElement x="2" y="0" width="155" height="20" uuid="f02efe43-d21b-4b3c-bc89-f3317e4193f6"/>
 				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
-					<topPen lineWidth="0.5"/>
+					<topPen lineWidth="0.0"/>
 					<leftPen lineWidth="0.5"/>
 					<bottomPen lineWidth="0.5"/>
 				</box>
 				<textFieldExpression><![CDATA[$F{Date}]]></textFieldExpression>
 			</textField>
+			<rectangle>
+				<reportElement x="297" y="0" width="141" height="20" uuid="ec88ae9a-0774-4773-bc35-e462e7187910"/>
+			</rectangle>
 		</band>
 	</detail>
-	<columnFooter>
-		<band height="20">
+	<pageFooter>
+		<band height="22" splitType="Stretch">
+			<textField evaluationTime="Report">
+				<reportElement x="297" y="1" width="40" height="20" uuid="1310e423-1a49-4758-a83f-5db2a653aa24"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="217" y="1" width="80" height="20" uuid="a3da5b6e-7530-4de4-aab9-bc147ec8cfa1"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="20" splitType="Stretch">
+			<textField pattern="#,##0">
+				<reportElement x="157" y="0" width="140" height="20" uuid="a4196051-d084-4e3f-96f6-a2601b364903"/>
+				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.5"/>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Right">
+					<font isBold="true" isItalic="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{totalCollection}]]></textFieldExpression>
+			</textField>
 			<staticText>
-				<reportElement x="2" y="0" width="47" height="20" uuid="7cdd7310-9b1e-43ae-bf5d-3a5df1f3a3b2"/>
+				<reportElement x="2" y="0" width="47" height="20" uuid="6b39bc21-6e23-4f46-b54b-b92e2ab86c1b"/>
 				<box leftPadding="3">
 					<leftPen lineWidth="0.5"/>
 					<bottomPen lineWidth="0.5"/>
@@ -138,32 +185,19 @@ GROUP BY  DATE(sma_payments.Date)]]>
 				<text><![CDATA[Total]]></text>
 			</staticText>
 			<textField evaluationTime="Report" pattern="#,##0" isBlankWhenNull="true">
-				<reportElement x="49" y="0" width="108" height="20" uuid="51283cb0-e645-4727-bda0-db923fc8e2e4"/>
+				<reportElement x="49" y="0" width="108" height="20" uuid="565c5ce7-c009-4cc3-819a-f255cb3007b6"/>
 				<box leftPadding="3" rightPadding="3">
 					<leftPen lineWidth="0.5"/>
 					<bottomPen lineWidth="0.5"/>
 				</box>
-				<textElement verticalAlignment="Middle">
+				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font isBold="true" isItalic="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{rowNo}]]></textFieldExpression>
 			</textField>
-			<textField pattern="#,##0">
-				<reportElement x="157" y="0" width="121" height="20" uuid="64cc1e18-d3cc-4e6c-9124-191c2508f626"/>
-				<box topPadding="2" leftPadding="2" bottomPadding="2" rightPadding="2">
-					<topPen lineWidth="0.0"/>
-					<leftPen lineWidth="0.5"/>
-					<bottomPen lineWidth="0.5"/>
-					<rightPen lineWidth="0.25"/>
-				</box>
-				<textElement>
-					<font isBold="true" isItalic="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$V{totalCollection}]]></textFieldExpression>
-			</textField>
+			<rectangle>
+				<reportElement x="297" y="0" width="141" height="20" uuid="138d9c87-a0ee-46fe-8411-6743c879cb2e"/>
+			</rectangle>
 		</band>
-	</columnFooter>
-	<pageFooter>
-		<band splitType="Stretch"/>
-	</pageFooter>
+	</summary>
 </jasperReport>

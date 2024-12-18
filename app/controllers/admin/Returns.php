@@ -206,7 +206,7 @@ class Returns extends MY_Controller
         }
     }
 
-    public function delete($id = null)
+    public function delete1($id = null)
     {
         $this->owner_only();
 

@@ -242,7 +242,7 @@ class Quotes extends MY_Controller
         $this->sma->generate_pdf($html, $name);
     }
 
-    public function delete($id = null)
+    public function delete1($id = null)
     {
         $this->owner_only();
 
@@ -759,7 +759,7 @@ class Quotes extends MY_Controller
 
         if ($this->form_validation->run() == true) {
             if (!empty($_POST['val'])) {
-                if ($this->input->post('form_action') == 'delete') {
+                if ($this->input->post('form_action') == 'delete1') {
                     $this->sma->checkPermissions('delete');
                     foreach ($_POST['val'] as $id) {
                         $this->quotes_model->deleteQuote($id);

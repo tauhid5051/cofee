@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Master" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="1f53085b-7850-4844-a60b-472d376ca3e2">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Sub Report"/>
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="startDate" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="endDate" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT a.product_id , sma_products.`name`, SUM(a.purchase_qty) purchase, SUM(a.sales_qty)  sale  FROM (
+SELECT `product_id`, 0 purchase_qty,   SUM(`quantity`) sales_qty FROM `sma_sale_items`
+LEFT JOIN `sma_sales` ON `sma_sales`.`id` = `sma_sale_items`.`sale_id`
+WHERE DATE(`date`) <= $P{endDate}
+GROUP BY `product_id`
+UNION ALL
+SELECT `product_id`,  SUM(`quantity`) purchase_qty ,  0 sales_qty FROM `sma_purchase_items`
+WHERE DATE(`date`) <= $P{endDate}
+GROUP BY `product_id` ) a
+LEFT JOIN sma_products ON a.product_id = sma_products.id
+GROUP BY a.product_id, sma_products.`name`]]>
+	</queryString>
+	<field name="product_id" class="java.lang.Long">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="name" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="purchase" class="java.math.BigDecimal"/>
+	<field name="sale" class="java.math.BigDecimal"/>
+	<group name="name">
+		<groupExpression><![CDATA[$F{name}]]></groupExpression>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="50" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="0" width="555" height="50" forecolor="#4164A6" uuid="2e9bc4a2-7a29-4567-8abb-f04dfadc87b4"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="20"/>
+				</textElement>
+				<text><![CDATA[Address Book]]></text>
+			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="21" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="100" height="20" uuid="90f8e9fa-3936-498a-9d16-a06d3b8b4c42"/>
+				<text><![CDATA[product_id]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="105" y="0" width="100" height="20" uuid="5acb14c6-929b-4b3c-bd43-d63805bb9611"/>
+				<text><![CDATA[name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="210" y="0" width="100" height="20" uuid="60f556d2-6049-4050-91a9-fc88d5d59bb1"/>
+				<text><![CDATA[purchase]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="315" y="0" width="100" height="20" uuid="5048dd34-36ba-4dc8-8404-2dc2ec763806"/>
+				<text><![CDATA[sale]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<frame>
+				<reportElement mode="Opaque" x="0" y="0" width="555" height="20" backcolor="#E6D6D5" uuid="fd305814-59e6-4bd7-938a-3b96035009e6"/>
+				<textField>
+					<reportElement x="0" y="0" width="100" height="20" uuid="dfa10566-fffd-47b8-9bff-cfaf79c362cb"/>
+					<textFieldExpression><![CDATA[$F{product_id}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="105" y="0" width="100" height="20" uuid="c90074aa-1b63-48e5-89a2-f802444f69d6"/>
+					<textFieldExpression><![CDATA[$F{name}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="210" y="0" width="100" height="20" uuid="6574d530-43a8-4a0b-9a50-74b185351ec0"/>
+					<textFieldExpression><![CDATA[$F{purchase}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="315" y="0" width="100" height="20" uuid="6ecb9d57-45f2-40da-8752-8b44f2ce02b9"/>
+					<textFieldExpression><![CDATA[$F{sale}]]></textFieldExpression>
+				</textField>
+			</frame>
+			<line>
+				<reportElement positionType="Float" x="0" y="0" width="555" height="1" uuid="4e455094-729f-48b8-b5e7-2b3d17bcab97">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+			</line>
+		</band>
+	</detail>
+</jasperReport>

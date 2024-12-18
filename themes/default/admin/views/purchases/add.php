@@ -251,7 +251,7 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <?= lang('date', 'podate'); ?>
-                                    <?php echo form_input('date', ($_POST['date'] ?? ''), 'class="form-control input-tip datetime" id="podate" required="required"'); ?>
+                                    <?php echo form_input('date', ($_POST['date'] ?? ''), 'class="form-control input-tip datetime"  readonly id="podate" required="required"'); ?>
                                 </div>
                             </div>
                         <?php
@@ -259,7 +259,7 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <?= lang('reference_no', 'poref'); ?>
-                                <?php echo form_input('reference_no', ($_POST['reference_no'] ?? $ponumber), 'class="form-control input-tip" id="poref"'); ?>
+                                <?php echo form_input('reference_no', ($_POST['reference_no'] ?? $ponumber), 'class="form-control input-tip" readonly id="poref"'); ?>
                             </div>
                         </div>
                         <?php if ($Owner || $Admin || !$this->session->userdata('warehouse_id')) {

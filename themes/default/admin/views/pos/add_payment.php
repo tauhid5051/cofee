@@ -25,7 +25,7 @@
                 <div class="col-sm-6">
                     <div class="form-group">
                         <?= lang('reference_no', 'reference_no'); ?>
-                        <?= form_input('reference_no', (isset($_POST['reference_no']) ? $_POST['reference_no'] : $payment_ref), 'class="form-control tip" id="reference_no" required="required"'); ?>
+                        <?= form_input('reference_no', (isset($_POST['reference_no']) ? $_POST['reference_no'] : $payment_ref), 'class="form-control tip" id="reference_no" readonly required="required"'); ?>
                     </div>
                 </div>
 

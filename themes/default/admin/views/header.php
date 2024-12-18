@@ -339,7 +339,7 @@
                                 </a>
                             </li>
                             <li class="dropdown">
-                                <a class="btn bdarkGreen pos-tip" title="<?= lang('My Report') ?>" data-placement="bottom" data-html="true" href="<?= admin_url('mis_reports/openModal') ?>" data-toggle="modal" data-target="#myModal">
+                                <a class="btn bdarkGreen pos-tip" title="<?= lang('My Report') ?>" data-placement="bottom" data-html="true" href="<?= admin_url('mis_reports/openModal/paymentSummeryReport/paymentSummerySubReport') ?>" data-toggle="modal" data-target="#myModal">
                                     My Report
                                 </a>
                             </li>
@@ -799,12 +799,19 @@
 
                                                     <li id="reports_customer_report">
                                                         <a href="<?= admin_url('reports/UserWiseCollection1') ?>">
-                                                            <i class="fa fa-users"></i><span class="text"> <?= lang('User Wise Collection'); ?></span>
+                                                            <i class="fa fa-users"></i><span class="text"> <?= lang('1. User Wise Collection'); ?></span>
                                                         </a>
                                                     </li>
+
                                                     <li id="reports_customer_report">
-                                                        <a href="<?= admin_url('reports/productReport') ?>">
-                                                            <i class="fa fa-users"></i><span class="text"> <?= lang('Product Report'); ?></span>
+                                                        <a href="<?= admin_url('reports/itemstock') ?>">
+                                                            <i class="fa fa-users"></i><span class="text"> <?= lang('2. Stock Report'); ?></span>
+                                                        </a>
+                                                    </li>
+
+                                                    <li id="reports_customer_report">
+                                                        <a href="<?= admin_url('reports/purchaseslist') ?>">
+                                                            <i class="fa fa-users"></i><span class="text"> <?= lang('3. Itemspurchase Report'); ?></span>
                                                         </a>
                                                     </li>
 

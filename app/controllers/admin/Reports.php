@@ -20,6 +20,8 @@ class Reports extends MY_Controller
         $this->lang->admin_load('reports', $this->Settings->user_language);
         $this->load->library('form_validation');
         $this->load->admin_model('reports_model');
+        $this->load->admin_model('products_model');
+
         $this->PHPJasper = new PHPJasper();
         $this->data['pb'] = [
             'cash'       => lang('cash'),
@@ -3397,5 +3399,152 @@ class Reports extends MY_Controller
         // $this->print_arrays($this->session);
 
         $this->page_construct('reports/product_report', $meta, $this->data);
+    }
+
+
+    public function itemstock()
+    {
+        // $this->print_arrays($this->input->post());
+
+        // $this->sma->checkPermissions('customers');
+        $this->data['error'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('error');
+
+        $this->data['page_title'] = 'Stock Report';
+
+        $bc = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('reports'), 'page' => lang('reports')], ['link' => '#', 'page' => $this->data['page_title']]];
+        $meta = ['page_title' => $this->data['page_title'], 'bc' => $bc];
+
+        $this->data['products'] = [];
+        $this->data['customers'] = [];
+        // $this->data['allcustomers'] = $this->reports_model->getCustomers();
+        $this->data['allproducts'] = $this->products_model->getAllProducts();
+        $this->data['categories'] = $this->site->getAllCategories();
+        // $this->data['customer_groups'] = $this->companies_model->getAllCustomerGroups();
+        // $this->data['price_groups'] = $this->companies_model->getAllPriceGroups();
+
+        $customer = $this->input->post('customer') ? $this->input->post('customer') : null;
+        $product = $this->input->post('product') ? $this->input->post('product') : null;
+        $customer_group = $this->input->post('customer_group') ? $this->input->post('customer_group') : null;
+        $category = $this->input->post('category') ? $this->input->post('category') : null;
+        $subcategory = $this->input->post('subcategory') ? $this->input->post('subcategory') : null;
+        $start_date = $this->input->post('start_date') ? $this->input->post('start_date') : null;
+        $end_date = $this->input->post('end_date') ? $this->input->post('end_date') : null;
+
+        $today = date("Y-m-d");
+
+        if ($this->input->post()) {
+
+            if ($end_date) {
+                $end_date = $this->input->post('end_date');
+                $end_date = str_replace('/', '-', $end_date);
+                $end_date = date("Y-m-d", strtotime($end_date));
+            }
+
+
+            if ($product && $category) {
+                $query = $this->db->query("SELECT a.product_id, sma_products.`code`, sma_products.`name`, sma_products.`cost`, sma_products.`category_id`, `sma_categories`.`name` category_name, SUM(a.purchase_qty) purchase, SUM(a.sales_qty) sale, SUM(a.adjust_qty) adjust FROM (  SELECT `product_id`, SUM(`quantity`) purchase_qty, 0 sales_qty, 0 adjust_qty FROM `sma_purchase_items` WHERE DATE(`date`) <= '$end_date' GROUP BY `product_id` UNION ALL SELECT `product_id`, 0 purchase_qty, SUM(`quantity`) sales_qty, 0 adjust_qty FROM `sma_sale_items` LEFT JOIN `sma_sales` ON `sma_sales`.`id` = `sma_sale_items`.`sale_id` WHERE DATE(`date`) <= '$end_date' GROUP BY `product_id` UNION ALL SELECT `product_id`, 0 purchase_qty, 0 sales_qty, SUM( CASE WHEN TYPE='addition' THEN `quantity` ELSE -1*`quantity` END ) adjust_qty FROM `sma_adjustment_items` LEFT JOIN `sma_adjustments` ON `sma_adjustments`.`id` = `sma_adjustment_items`.`adjustment_id` WHERE DATE(`date`) <= '$end_date' GROUP BY `product_id`) a LEFT JOIN sma_products ON a.product_id = sma_products.id LEFT JOIN `sma_categories` ON sma_categories.`id` = sma_products.`category_id`   WHERE sma_products.`id` = '$product' AND sma_products.`category_id` = '$category' and  sma_products.`is_active` = 1  GROUP BY a.product_id, sma_products.`name`");
+            } else if ($category) {
+                $query = $this->db->query("SELECT a.product_id, sma_products.`code`, sma_products.`name`, sma_products.`cost`, sma_products.`category_id`, `sma_categories`.`name` category_name, SUM(a.purchase_qty) purchase, SUM(a.sales_qty) sale, SUM(a.adjust_qty) adjust FROM (  SELECT `product_id`, SUM(`quantity`) purchase_qty, 0 sales_qty, 0 adjust_qty FROM `sma_purchase_items` WHERE DATE(`date`) <= '$end_date' GROUP BY `product_id` UNION ALL SELECT `product_id`, 0 purchase_qty, SUM(`quantity`) sales_qty, 0 adjust_qty FROM `sma_sale_items` LEFT JOIN `sma_sales` ON `sma_sales`.`id` = `sma_sale_items`.`sale_id` WHERE DATE(`date`) <= '$end_date' GROUP BY `product_id` UNION ALL SELECT `product_id`, 0 purchase_qty, 0 sales_qty, SUM( CASE WHEN TYPE='addition' THEN `quantity` ELSE -1*`quantity` END ) adjust_qty FROM `sma_adjustment_items` LEFT JOIN `sma_adjustments` ON `sma_adjustments`.`id` = `sma_adjustment_items`.`adjustment_id` WHERE DATE(`date`) <= '$end_date' GROUP BY `product_id`) a LEFT JOIN sma_products ON a.product_id = sma_products.id LEFT JOIN `sma_categories` ON sma_categories.`id` = sma_products.`category_id`   WHERE sma_products.`category_id` = '$category' and  sma_products.`is_active` = 1   GROUP BY a.product_id, sma_products.`name`");
+            } else if ($product) {
+                $query = $this->db->query("SELECT a.product_id, sma_products.`code`, sma_products.`name`, sma_products.`cost`, sma_products.`category_id`, `sma_categories`.`name` category_name, SUM(a.purchase_qty) purchase, SUM(a.sales_qty) sale, SUM(a.adjust_qty) adjust FROM (  SELECT `product_id`, SUM(`quantity`) purchase_qty, 0 sales_qty, 0 adjust_qty FROM `sma_purchase_items` WHERE DATE(`date`) <= '$end_date' GROUP BY `product_id` UNION ALL SELECT `product_id`, 0 purchase_qty, SUM(`quantity`) sales_qty, 0 adjust_qty FROM `sma_sale_items` LEFT JOIN `sma_sales` ON `sma_sales`.`id` = `sma_sale_items`.`sale_id` WHERE DATE(`date`) <= '$end_date' GROUP BY `product_id` UNION ALL SELECT `product_id`, 0 purchase_qty, 0 sales_qty, SUM( CASE WHEN TYPE='addition' THEN `quantity` ELSE -1*`quantity` END ) adjust_qty FROM `sma_adjustment_items` LEFT JOIN `sma_adjustments` ON `sma_adjustments`.`id` = `sma_adjustment_items`.`adjustment_id` WHERE DATE(`date`) <= '$end_date' GROUP BY `product_id`) a LEFT JOIN sma_products ON a.product_id = sma_products.id LEFT JOIN `sma_categories` ON sma_categories.`id` = sma_products.`category_id`   WHERE sma_products.`id` = '$product' and  sma_products.`is_active` = 1  GROUP BY a.product_id, sma_products.`name`");
+            } else {
+                $query = $this->db->query("SELECT a.product_id, sma_products.`code`, sma_products.`name`, sma_products.`cost`, sma_products.`category_id`, `sma_categories`.`name` category_name, SUM(a.purchase_qty) purchase, SUM(a.sales_qty) sale, SUM(a.adjust_qty) adjust FROM (  SELECT `product_id`, SUM(`quantity`) purchase_qty, 0 sales_qty, 0 adjust_qty FROM `sma_purchase_items` WHERE DATE(`date`) <= '$end_date' GROUP BY `product_id` UNION ALL SELECT `product_id`, 0 purchase_qty, SUM(`quantity`) sales_qty, 0 adjust_qty FROM `sma_sale_items` LEFT JOIN `sma_sales` ON `sma_sales`.`id` = `sma_sale_items`.`sale_id` WHERE DATE(`date`) <= '$end_date' GROUP BY `product_id` UNION ALL SELECT `product_id`, 0 purchase_qty, 0 sales_qty, SUM( CASE WHEN TYPE='addition' THEN `quantity` ELSE -1*`quantity` END ) adjust_qty FROM `sma_adjustment_items` LEFT JOIN `sma_adjustments` ON `sma_adjustments`.`id` = `sma_adjustment_items`.`adjustment_id` WHERE DATE(`date`) <= '$end_date' GROUP BY `product_id`) a LEFT JOIN sma_products ON a.product_id = sma_products.id LEFT JOIN `sma_categories` ON sma_categories.`id` = sma_products.`category_id`  where sma_products.`is_active` = 1   GROUP BY a.product_id, sma_products.`name`");
+            }
+
+            $this->data['records'] = $query->result_array();
+            //    $this->print_arrays($this->db->last_query());
+            //  $this->print_arrays($this->data['records']);
+            $this->data['date_range'] = $end_date;
+            $this->data['purchasetotal'] = array_sum(array_column($this->data['records'], 'purchase'));
+            $this->data['saletotal'] = array_sum(array_column($this->data['records'], 'sale'));
+            $this->data['adjusttotal'] = array_sum(array_column($this->data['records'], 'adjust'));
+
+            //   $this->print_arrays($this->db->last_query());
+            //  $this->print_arrays($this->data);
+        }
+        $this->page_construct('reports/itemstock', $meta, $this->data);
+    }
+
+    public function purchaseslist()
+    {
+    //  $this->print_arrays($this->input->post());
+
+        $this->sma->checkPermissions('customers');
+        $this->data['error'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('error');
+
+        $this->data['page_title'] = 'Purchase Report';
+
+        $bc = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('reports'), 'page' => lang('reports')], ['link' => '#', 'page' => $this->data['page_title']]];
+        $meta = ['page_title' => $this->data['page_title'], 'bc' => $bc];
+
+        $this->data['products'] = [];
+        $this->data['customers'] = [];
+        // $this->data['allcustomers'] = $this->reports_model->getCustomers();
+        $this->data['allproducts'] = $this->products_model->getAllProducts();
+        $this->data['categories'] = $this->site->getAllCategories();
+        // $this->data['customer_groups'] = $this->companies_model->getAllCustomerGroups();
+        // $this->data['price_groups'] = $this->companies_model->getAllPriceGroups();
+
+        $customer = $this->input->post('customer') ? $this->input->post('customer') : null;
+        $item_id = $this->input->post('item_id') ? $this->input->post('item_id') : null;
+        $item_name = $this->input->post('item_name') ? $this->input->post('item_name') : null;
+        $customer_group = $this->input->post('customer_group') ? $this->input->post('customer_group') : null;
+        $category = $this->input->post('category') ? $this->input->post('category') : null;
+        $subcategory = $this->input->post('subcategory') ? $this->input->post('subcategory') : null;
+        $start_date = $this->input->post('start_date') ? $this->input->post('start_date') : null;
+        $end_date = $this->input->post('end_date') ? $this->input->post('end_date') : null;
+
+
+        if ($start_date) {
+            $start_date = $this->input->post('start_date');
+            $start_date = str_replace('/', '-', $start_date);
+            $start_date = date("Y-m-d", strtotime($start_date));
+        }
+        if ($end_date) {
+            $end_date = $this->input->post('end_date');
+            $end_date = str_replace('/', '-', $end_date);
+            $end_date = date("Y-m-d", strtotime($end_date));
+        }
+
+        // $this->print_arrays($this->input->post());
+
+
+        $today = date("Y-m-d");
+        $first_day_month = date("Y-m-01", strtotime($today));
+        $this->db
+            ->select("`sma_purchases`.`id` purchase_id,`reference_no`,`sma_purchases`.`date` datetime,`supplier_id`,`supplier`,`grand_total`,`sma_purchases`.`status`,`created_by`,sma_users.`username`, `product_id`,`product_name`,`net_unit_cost`,`quantity`,`sma_purchase_items`.`warehouse_id`,`expiry`,`subtotal`,`quantity_balance`,`sma_purchase_items`.`date`,`sma_purchase_items`.`status`,`unit_cost`,`real_unit_cost`,`quantity_received`,`product_unit_code`,`base_unit_cost` ", false)
+            ->from('sma_purchases')
+            ->join('sma_purchase_items', '`sma_purchase_items`.`purchase_id` = `sma_purchases`.`id`', 'left')
+            ->join('sma_users', '`sma_users`.`id` = `sma_purchases`.`created_by`', 'left')
+            ->order_by('`sma_purchases`.`date`');
+
+
+        if ($item_id) {
+            $this->db->where('sma_purchase_items.`product_id`', $item_id);
+        }
+        if ($item_name) {
+            $this->db->like('sma_purchase_items.`product_name`', $item_name, 'both');
+        }
+        if ($start_date && $end_date) {
+            $this->db->where('`sma_purchases`.`date` BETWEEN "' . $start_date . '" and "' . date("Y-m-d", strtotime($end_date . ' +1 day')) . '"');
+            $this->data['date_range'] = $start_date . ' to ' . $end_date;
+        } else if ($end_date){
+            $this->db->where('`sma_purchases`.`date` BETWEEN "' . $start_date . '" and "' . date("Y-m-d", strtotime($end_date . ' +1 day')) . '"');
+            $this->data['date_range'] = $start_date . ' to ' . $end_date;
+
+        }
+        $query = $this->db->get();
+        $this->data['records'] = $query->result_array();
+        
+        // $this->print_arrays($this->db->last_query());
+        // $this->print_arrays($this->data['records']);
+
+        $this->data['subtotal'] = array_sum(array_column($this->data['records'], 'subtotal'));
+        $this->data['quantity'] = array_sum(array_column($this->data['records'], 'quantity'));
+
+
+        //  $this->print_arrays($this->db->last_query());
+
+        $this->page_construct('reports/purchaseslist', $meta, $this->data);
     }
 }

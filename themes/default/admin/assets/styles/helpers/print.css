@@ -92,5 +92,5 @@
     .tooltip, #sliding-ad { display: none !important; }
     .barcode, .barcodea4 { margin: 0; }
     .barcode, .barcode .item, .barcodea4, .barcodea4 .item, .style50, .div50 { border: none !important; }
-    .div50, .modal-content { page-break-after:always; }
+    /* .div50, .modal-content { page-break-after:always; } */
 }

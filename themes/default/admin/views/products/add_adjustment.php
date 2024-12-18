@@ -120,7 +120,7 @@
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <?= lang('date', 'qadate'); ?>
-                                    <?php echo form_input('date', (isset($_POST['date']) ? $_POST['date'] : ''), 'class="form-control input-tip datetime" id="qadate" required="required"'); ?>
+                                    <?php echo form_input('date', (isset($_POST['date']) ? $_POST['date'] : ''), 'class="form-control input-tip datetime"  readonly id="qadate" required="required"'); ?>
                                 </div>
                             </div>
                         <?php

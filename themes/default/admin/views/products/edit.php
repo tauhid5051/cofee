@@ -87,17 +87,23 @@ if (!empty($variants)) {
                     </div>
                     <div class="form-group all">
                         <?= lang('product_name', 'name') ?>
-                        <?= form_input('name', (isset($_POST['name']) ? $_POST['name'] : ($product ? $product->name : '')), 'class="form-control gen_slug" id="name" required="required"'); ?>
+                        <?= form_input('name', (isset($_POST['name']) ? $_POST['name'] : ($product ? $product->name : '')), 'class="form-control gen_slug" readonly id="name" required="required"'); ?>
+                    </div>
+                    <div class="form-group">
+                        <input type="checkbox" class="checkbox" value="1" name="is_active" id="is_active" <?= $product->is_active ? 'checked="checked"' : ''; ?>>
+                        <label for="is_active" class="padding05">
+                            <?= 'Active?'; ?>
+                        </label>
                     </div>
                     <div class="form-group all">
                         <?= lang('product_code', 'code') ?>
-                        <?= form_input('code', (isset($_POST['code']) ? $_POST['code'] : ($product ? $product->code : '')), 'class="form-control" id="code"  required="required"') ?>
+                        <?= form_input('code', (isset($_POST['code']) ? $_POST['code'] : ($product ? $product->code : '')), 'class="form-control" readonly id="code"  required="required"') ?>
                         <span class="help-block"><?= lang('you_scan_your_barcode_too') ?></span>
                     </div>
 
                     <div class="form-group all">
                         <?= lang('slug', 'slug'); ?>
-                        <?= form_input('slug', set_value('slug', ($product ? $product->slug : '')), 'class="form-control tip" id="slug" required="required"'); ?>
+                        <?= form_input('slug', set_value('slug', ($product ? $product->slug : '')), 'class="form-control tip" readonly id="slug" required="required"'); ?>
                     </div>
                     <div class="form-group all">
                         <?= lang('second_name', 'second_name'); ?>

@@ -144,7 +144,7 @@ $allow_discount = ($Owner || $Admin || $this->session->userdata('allow_discount'
                             <div class="col-md-4">
                                 <div class="form-group">
                                     <?= lang('date', 'sldate'); ?>
-                                    <?php echo form_input('date', ($_POST['date'] ?? $this->sma->hrld($inv->date)), 'class="form-control input-tip datetime" id="sldate" required="required"'); ?>
+                                    <?php echo form_input('date', ($_POST['date'] ?? $this->sma->hrld($inv->date)), 'class="form-control input-tip datetime"  readonly id="sldate" required="required"'); ?>
                                 </div>
                             </div>
                         <?php
@@ -152,7 +152,7 @@ $allow_discount = ($Owner || $Admin || $this->session->userdata('allow_discount'
                         <div class="col-md-4">
                             <div class="form-group">
                                 <?= lang('reference_no', 'slref'); ?>
-                                <?php echo form_input('reference_no', ($_POST['reference_no'] ?? ''), 'class="form-control input-tip" id="slref" required="required"'); ?>
+                                <?php echo form_input('reference_no', ($_POST['reference_no'] ?? ''), 'class="form-control input-tip" readonly id="slref" required="required"'); ?>
                             </div>
                         </div>
                         <?php if ($Owner || $Admin || !$this->session->userdata('biller_id')) {

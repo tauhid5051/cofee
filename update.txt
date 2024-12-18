@@ -3,3 +3,56 @@ date : 02/08/2022
 1. D:\Tauhid\laragon\www\coffee\themes\default\admin\views\header.php
 2. D:\Tauhid\laragon\www\coffee\app\controllers\admin\Reports.php
 3. D:\Tauhid\laragon\www\coffee\themes\default\admin\views\reports\userWiseCollection.php
+
+
+
+
+$this->input->post('form_action') == 'delete1'
+
+public function delete1($id = null)
+
+
+'class="form-control input-tip datetime"  readonly
+
+
+
+
+
+CREATE USER 'mirpur_coffee'@'localhost' IDENTIFIED BY 'BT*xc9VCffYgN*wFmf';
+GRANT ALL PRIVILEGES ON mirpur_coffee. * TO 'mirpur_coffee'@'localhost';
+FLUSH PRIVILEGES;
+
+
+
+
+
+
+SELECT TABLE_NAME, table_rows
+FROM INFORMATION_SCHEMA.TABLES
+WHERE TABLE_SCHEMA = 'mirpur_coffee'
+ORDER BY table_rows DESC ;
+
+
+
+
+
+TRUNCATE TABLE `mirpur_coffee`.sma_costing;
+TRUNCATE TABLE `mirpur_coffee`.sma_sale_items;
+TRUNCATE TABLE `mirpur_coffee`.sma_sales;
+TRUNCATE TABLE `mirpur_coffee`.sma_payments;
+TRUNCATE TABLE `mirpur_coffee`.sma_purchase_items ;
+TRUNCATE TABLE `mirpur_coffee`.sma_purchases;
+TRUNCATE TABLE `mirpur_coffee`.sma_user_logins;
+TRUNCATE TABLE `mirpur_coffee`.sma_adjustment_items;
+TRUNCATE TABLE `mirpur_coffee`.sma_logs;
+TRUNCATE TABLE `mirpur_coffee`.sma_companies;
+TRUNCATE TABLE `mirpur_coffee`.sma_adjustments;
+TRUNCATE TABLE `mirpur_coffee`.sma_sessions;
+TRUNCATE TABLE `mirpur_coffee`.sma_warehouses_products;
+TRUNCATE TABLE `mirpur_coffee`.sma_products;
+TRUNCATE TABLE `mirpur_coffee`.sma_pos_register;
+TRUNCATE TABLE `mirpur_coffee`.sma_returns;
+TRUNCATE TABLE `mirpur_coffee`.sma_return_items;
+TRUNCATE TABLE `mirpur_coffee`.sma_stock_counts;
+
+

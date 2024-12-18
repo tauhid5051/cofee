@@ -619,7 +619,7 @@ class Sales extends MY_Controller
 
     /* ------------------------------- */
 
-    public function delete($id = null)
+    public function delete1($id = null)
     {
         $this->owner_only();
 
@@ -732,7 +732,7 @@ class Sales extends MY_Controller
 
         if ($this->form_validation->run() == true) {
             if (!empty($_POST['val'])) {
-                if ($this->input->post('form_action') == 'delete') {
+                if ($this->input->post('form_action') == 'delete1') {
                     $this->sma->checkPermissions('delete_delivery');
                     foreach ($_POST['val'] as $id) {
                         $this->sales_model->deleteDelivery($id);
@@ -792,10 +792,12 @@ class Sales extends MY_Controller
             $id = $this->input->get('id');
         }
         $inv = $this->sales_model->getInvoiceByID($id);
-        if ($inv->sale_status == 'returned' || $inv->return_id || $inv->return_sale_ref) {
-            $this->session->set_flashdata('error', lang('sale_x_action'));
-            admin_redirect($_SERVER['HTTP_REFERER'] ?? 'welcome');
-        }
+
+        // if ($inv->sale_status == 'returned' || $inv->return_id || $inv->return_sale_ref) {
+        //     $this->session->set_flashdata('error', lang('sale_x_action'));
+        //     admin_redirect($_SERVER['HTTP_REFERER'] ?? 'welcome');
+        // }
+
         if (!$this->session->userdata('edit_right')) {
             $this->sma->view_rights($inv->created_by);
         }
@@ -1543,7 +1545,7 @@ class Sales extends MY_Controller
 
         if ($this->form_validation->run() == true) {
             if (!empty($_POST['val'])) {
-                if ($this->input->post('form_action') == 'delete') {
+                if ($this->input->post('form_action') == 'delete1') {
                     $this->sma->checkPermissions('delete_gift_card');
                     foreach ($_POST['val'] as $id) {
                         $this->sales_model->deleteGiftCard($id);
@@ -1774,10 +1776,12 @@ class Sales extends MY_Controller
             $id = $this->input->get('id');
         }
         $sale = $this->sales_model->getInvoiceByID($id);
-        if ($sale->return_id) {
-            $this->session->set_flashdata('error', lang('sale_already_returned'));
-            redirect($_SERVER['HTTP_REFERER']);
-        }
+
+
+        // if ($sale->return_id) {
+        //     $this->session->set_flashdata('error', lang('sale_already_returned'));
+        //     redirect($_SERVER['HTTP_REFERER']);
+        // }
 
         $this->form_validation->set_rules('return_surcharge', lang('return_surcharge'), 'required');
 
@@ -2043,7 +2047,7 @@ class Sales extends MY_Controller
 
         if ($this->form_validation->run() == true) {
             if (!empty($_POST['val'])) {
-                if ($this->input->post('form_action') == 'delete') {
+                if ($this->input->post('form_action') == 'delete1') {
                     $this->sma->checkPermissions('delete');
                     foreach ($_POST['val'] as $id) {
                         $this->sales_model->deleteSale($id);

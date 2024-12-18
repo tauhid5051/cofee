@@ -199,8 +199,11 @@ class Auth extends MY_Controller
         }
     }
 
-    public function delete($id = null)
+    public function delete1($id = null)
     {
+        $this->session->set_flashdata('warning', lang('access_denied'));
+        redirect($_SERVER['HTTP_REFERER']);
+
         $this->owner_only();
         if (DEMO) {
             $this->session->set_flashdata('warning', lang('disabled_in_demo'));
@@ -905,7 +908,7 @@ class Auth extends MY_Controller
 
         if ($this->form_validation->run() == true) {
             if (!empty($_POST['val'])) {
-                if ($this->input->post('form_action') == 'delete') {
+                if ($this->input->post('form_action') == 'delete1') {
                     foreach ($_POST['val'] as $id) {
                         if ($id != $this->session->userdata('user_id')) {
                             $this->auth_model->delete_user($id);
