@@ -15,7 +15,7 @@
             return currencyFormat(total+rounding-paid);
         }
         oTable = $('#POSData').dataTable({
-            "aaSorting": [[1, "desc"], [2, "desc"]],
+            "aaSorting": [[0, "desc"]],
             "aLengthMenu": [[10, 25, 50, 100, -1], [10, 25, 50, 100, "<?= lang('all') ?>"]],
             "iDisplayLength": <?= $Settings->rows_per_page ?>,
             'bProcessing': true, 'bServerSide': true,

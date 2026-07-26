@@ -65,10 +65,10 @@ $query_builder = true;
 
 $db['default'] = [
     'dsn'          => '',
-    'hostname'     => '192.168.255.43',
-    'username'     => 'bizit',
-    'password'     => 'dmRokon@123',
-    'database'     => 'kg_coffee',
+    'hostname'     => 'localhost',
+    'username'     => 'root',
+    'password'     => '',
+    'database'     => 'smadb',
     'dbdriver'     => 'mysqli',
     'dbprefix'     => 'sma_',
     'port'         => '3306',
@@ -89,10 +89,10 @@ $db['default'] = [
 
 $db['jasper'] = [
     'driver' => 'mysql',
-    'username' => 'jasper11111',
-    'password' => 'dmRokon123',
+    'username' => 'root',
+    'password' => '',
     'host' => 'localhost',
-    'database' => 'coffee',
+    'database' => 'smadb',
     'port' => '3306'
 
 ];

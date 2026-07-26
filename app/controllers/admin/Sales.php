@@ -1602,6 +1602,9 @@ class Sales extends MY_Controller
 
     public function index($warehouse_id = null)
     {
+
+   
+
         $this->sma->checkPermissions();
 
         $this->data['error'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('error');
@@ -2404,7 +2407,10 @@ class Sales extends MY_Controller
         $warehouse      = $this->site->getWarehouseByID($warehouse_id);
         $customer       = $this->site->getCompanyByID($customer_id);
         $customer_group = $this->site->getCustomerGroupByID($customer->customer_group_id);
+
         $rows           = $this->sales_model->getProductNames($sr, $warehouse_id, $pos);
+
+        
         if ($rows) {
             $r = 0;
             foreach ($rows as $row) {

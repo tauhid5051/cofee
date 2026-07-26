@@ -3368,7 +3368,7 @@ class Reports extends MY_Controller
         $today_end = date("Y-m-d", strtotime($today . ' +1 day'));
 
 
-        /* SELECT sma_products.id, sma_products.code, sma_products.name, PSales.supplier_id, PSales.supplier, COALESCE(PCosts.purchasedQty, 0) AS PurchasedQty, COALESCE(PSales.soldQty, 0) AS SoldQty, COALESCE(PCosts.balacneQty, 0) AS BalacneQty, COALESCE(PCosts.totalPurchase, 0) AS TotalPurchase, COALESCE(PCosts.balacneValue, 0) AS TotalBalance, COALESCE(PSales.totalSale, 0) AS TotalSales, ( COALESCE(PSales.totalSale, 0) - COALESCE(PCosts.totalPurchase, 0) ) AS Profit 
+        /* SELECT sma_products.id, sma_products.code, sma_products.name, PSales.supplier_id, PSales.supplier, COALESCE(PCosts.purchasedQty, 0) AS PurchasedQty, COALESCE(PSales.soldQty, 0) AS SoldQty, COALESCE(PCosts.balacneQty, 0) AS BalacneQty, COALESCE(PCosts.totalPurchase, 0) AS TotalPurchase, COALESCE(PCosts.balacneValue, 0) AS TotalBalance, COALESCE(PSales.totalSale, 0) AS TotalSales, ( COALESCE(PSales.totalSale, 0) - COALESCE(PCosts.totalPurchase, 0) ) AS Profit
         FROM `sma_products` LEFT JOIN (SELECT p.`supplier_id`, p.`supplier`, si.product_id, si.`purchase_id`, si.`purchase_item_id`, s.date AS DATE, s.created_by AS created_by, SUM(si.quantity) soldQty, SUM(si.quantity * si.sale_unit_price) totalSale FROM sma_costing si JOIN sma_sales s ON s.id = si.sale_id JOIN `sma_purchases` p ON si.`purchase_id` = p.`id` GROUP BY si.product_id , p.`supplier_id` ) PSales ON `sma_products`.`id` = `PSales`.`product_id` LEFT JOIN (SELECT product_id, p.date AS DATE, p.created_by AS created_by, SUM( CASE WHEN pi.purchase_id IS NOT NULL THEN quantity ELSE 0 END ) AS purchasedQty, SUM(quantity_balance) AS balacneQty, SUM(unit_cost * quantity_balance) balacneValue, SUM( ( CASE WHEN pi.purchase_id IS NOT NULL THEN (pi.subtotal) ELSE 0 END ) ) totalPurchase FROM sma_purchase_items PI LEFT JOIN sma_purchases p ON p.id = pi.purchase_id WHERE pi.status = 'received' GROUP BY pi.product_id) PCosts ON `sma_products`.`id` = `PCosts`.`product_id` WHERE `sma_products`.`type` != 'combo' GROUP BY `sma_products`.`id` ,   PSales.supplier_id ORDER BY PSales.supplier_id */
 
         $query = $this->db->query("SELECT sma_products.id, sma_products.code, sma_products.name, PSales.supplier_id, PSales.supplier, COALESCE(PCosts.purchasedQty, 0) AS PurchasedQty, COALESCE(PSales.soldQty, 0) AS SoldQty, COALESCE(PCosts.balacneQty, 0) AS BalacneQty, COALESCE(PCosts.totalPurchase, 0) AS TotalPurchase, COALESCE(PCosts.balacneValue, 0) AS TotalBalance, COALESCE(PSales.totalSale, 0) AS TotalSales, ( COALESCE(PSales.totalSale, 0) - COALESCE(PCosts.totalPurchase, 0) ) AS Profit FROM `sma_products` LEFT JOIN (SELECT p.`supplier_id`, p.`supplier`, si.product_id, si.`purchase_id`, si.`purchase_item_id`, s.date AS DATE, s.created_by AS created_by, SUM(si.quantity) soldQty, SUM(si.quantity * si.sale_unit_price) totalSale FROM sma_costing si JOIN sma_sales s ON s.id = si.sale_id JOIN `sma_purchases` p ON si.`purchase_id` = p.`id` GROUP BY si.product_id , p.`supplier_id` ) PSales ON `sma_products`.`id` = `PSales`.`product_id` LEFT JOIN (SELECT product_id, p.date AS DATE, p.created_by AS created_by, SUM( CASE WHEN pi.purchase_id IS NOT NULL THEN quantity ELSE 0 END ) AS purchasedQty, SUM(quantity_balance) AS balacneQty, SUM(unit_cost * quantity_balance) balacneValue, SUM( ( CASE WHEN pi.purchase_id IS NOT NULL THEN (pi.subtotal) ELSE 0 END ) ) totalPurchase FROM sma_purchase_items PI LEFT JOIN sma_purchases p ON p.id = pi.purchase_id WHERE pi.status = 'received' GROUP BY pi.product_id, p.`supplier_id`) PCosts ON `sma_products`.`id` = `PCosts`.`product_id` WHERE `sma_products`.`type` != 'combo' GROUP BY `sma_products`.`id` ,   PSales.supplier_id ORDER BY PSales.supplier_id");
@@ -3465,9 +3465,12 @@ class Reports extends MY_Controller
         $this->page_construct('reports/itemstock', $meta, $this->data);
     }
 
+
+
+
     public function purchaseslist()
     {
-    //  $this->print_arrays($this->input->post());
+        //  $this->print_arrays($this->input->post());
 
         $this->sma->checkPermissions('customers');
         $this->data['error'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('error');
@@ -3491,8 +3494,8 @@ class Reports extends MY_Controller
         $customer_group = $this->input->post('customer_group') ? $this->input->post('customer_group') : null;
         $category = $this->input->post('category') ? $this->input->post('category') : null;
         $subcategory = $this->input->post('subcategory') ? $this->input->post('subcategory') : null;
-        $start_date = $this->input->post('start_date') ? $this->input->post('start_date') : null;
-        $end_date = $this->input->post('end_date') ? $this->input->post('end_date') : null;
+        $start_date = $this->input->post('start_date') ? $this->input->post('start_date') : date("Y-m-d");
+        $end_date = $this->input->post('end_date') ? $this->input->post('end_date') : date("Y-m-d");
 
 
         if ($start_date) {
@@ -3528,15 +3531,15 @@ class Reports extends MY_Controller
         if ($start_date && $end_date) {
             $this->db->where('`sma_purchases`.`date` BETWEEN "' . $start_date . '" and "' . date("Y-m-d", strtotime($end_date . ' +1 day')) . '"');
             $this->data['date_range'] = $start_date . ' to ' . $end_date;
-        } else if ($end_date){
+        } else if ($end_date) {
             $this->db->where('`sma_purchases`.`date` BETWEEN "' . $start_date . '" and "' . date("Y-m-d", strtotime($end_date . ' +1 day')) . '"');
             $this->data['date_range'] = $start_date . ' to ' . $end_date;
-
         }
         $query = $this->db->get();
         $this->data['records'] = $query->result_array();
-        
+
         // $this->print_arrays($this->db->last_query());
+
         // $this->print_arrays($this->data['records']);
 
         $this->data['subtotal'] = array_sum(array_column($this->data['records'], 'subtotal'));
@@ -3546,5 +3549,122 @@ class Reports extends MY_Controller
         //  $this->print_arrays($this->db->last_query());
 
         $this->page_construct('reports/purchaseslist', $meta, $this->data);
+    }
+
+
+
+
+    public function saleslist()
+    {
+        $this->sma->checkPermissions('customers');
+
+        $this->data['page_title'] = 'Sales Report';
+
+        $bc = [
+            ['link' => base_url(), 'page' => lang('home')],
+            ['link' => admin_url('reports'), 'page' => lang('reports')],
+            ['link' => '#', 'page' => $this->data['page_title']]
+        ];
+
+        $meta = ['page_title' => $this->data['page_title'], 'bc' => $bc];
+
+        $this->page_construct('reports/saleslist', $meta, $this->data);
+    }
+
+
+    public function getSalesList()
+    {
+        $this->sma->checkPermissions('customers');
+
+        $draw   = intval($this->input->get("draw"));
+        $start  = intval($this->input->get("start"));
+        $length = intval($this->input->get("length"));
+        $search = $this->input->get("search")['value'];
+
+        $item_id   = $this->input->get('item_id');
+        $item_name = $this->input->get('item_name');
+        $start_date = $this->input->get('start_date') ? $this->input->get('start_date') : date("Y-m-d");
+        $end_date   = $this->input->get('end_date') ? $this->input->get('end_date') : date("Y-m-d");
+
+        // Format date
+        if ($start_date) {
+            $start_date = date("Y-m-d", strtotime(str_replace('/', '-', $start_date)));
+        }
+        if ($end_date) {
+            $end_date = date("Y-m-d", strtotime(str_replace('/', '-', $end_date)));
+        }
+
+        $this->db->from('sma_sales');
+        $this->db->join('sma_sale_items', 'sma_sale_items.sale_id = sma_sales.id', 'left');
+        $this->db->join('sma_users', 'sma_users.id = sma_sales.created_by', 'left');
+
+        // Filters
+        if ($item_id) {
+            $this->db->where('sma_sale_items.product_id', $item_id);
+        }
+
+        if ($item_name) {
+            $this->db->like('sma_sale_items.product_name', $item_name);
+        }
+
+        if ($start_date && $end_date) {
+            $this->db->where("DATE(sma_sales.date) >=", $start_date);
+            $this->db->where("DATE(sma_sales.date) <=", $end_date);
+        }
+
+        if (!empty($search)) {
+            $this->db->group_start()
+                ->like('sma_sales.reference_no', $search)
+                ->or_like('sma_sales.customer', $search)
+                ->or_like('sma_sale_items.product_name', $search)
+                ->group_end();
+        }
+
+        // Count filtered
+        $totalFiltered = $this->db->count_all_results('', false);
+
+        // Select fields
+        $this->db->select("
+        sma_sales.id AS sale_id,
+        sma_sales.date,
+        sma_sales.reference_no,
+        sma_sales.customer,
+        sma_users.username,
+        sma_sale_items.product_name,
+        sma_sale_items.quantity,
+        sma_sale_items.unit_price AS unit_cost,
+        sma_sale_items.subtotal
+    ");
+
+        // Pagination
+        if ($length != -1) {
+            $this->db->limit($length, $start);
+        }
+
+        $query = $this->db->get();
+        $data = [];
+
+        foreach ($query->result() as $row) {
+            $data[] = [
+                $row->date,
+                '<a href="' . admin_url('sales/modal_view/' . $row->sale_id) . '" data-toggle="modal">' . $row->reference_no . '</a>',
+                $row->customer,
+                $row->product_name,
+                number_format($row->unit_cost, 2),
+                intval($row->quantity),
+                number_format($row->subtotal, 2),
+                $row->username
+            ];
+        }
+
+        // Total records (without filter)
+        $totalRecords = $this->db->from('sma_sales')->count_all_results();
+
+        echo json_encode([
+            "draw" => $draw,
+            "recordsTotal" => $totalRecords,
+            "recordsFiltered" => $totalFiltered,
+            "data" => $data
+        ]);
     }
 }

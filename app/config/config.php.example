@@ -313,7 +313,7 @@ $config['cache_query_string'] = false;
 | http://codeigniter.com/user_guide/libraries/encryption.html
 |
 */
-$config['encryption_key'] = 'zyxe9RjWP2AYwmtNEra30kDITBvbCKLGUoVQc';
+$config['encryption_key'] = 'CHANGE_ME_GENERATE_A_32_CHAR_RANDOM_KEY';
 
 /*
 |--------------------------------------------------------------------------

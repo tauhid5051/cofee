@@ -815,6 +815,12 @@
                                                         </a>
                                                     </li>
 
+                                                    <li id="reports_customer_report">
+                                                        <a href="<?= admin_url('reports/saleslist') ?>">
+                                                            <i class="fa fa-users"></i><span class="text"> <?= lang('4. ItemSales Report'); ?></span>
+                                                        </a>
+                                                    </li>
+
 
 
                                                     <li id="reports_index">
