@@ -32,10 +32,11 @@
 !/assets/config_dumps/index.html
 !/assets/config_dumps/index.php
 
-# ----- Jasper reports: generated output only (source .jrxml stay tracked) -----
-/jasper/compiled/*
+# ----- Jasper reports: ignore only generated runtime output -----
+# Source report definitions (.jrxml), compiled templates (.jasper) and
+# data_files/ stay tracked. Only per-run outputs are ignored.
 /jasper/output/*
-/jasper/data_files/*
+!/jasper/output/.gitkeep
 /jasper/*.pdf
 /jasper/*.html
 
