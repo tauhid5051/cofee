@@ -1545,9 +1545,19 @@ class Products extends MY_Controller
             </ul>
         </div></div>';
         $this->load->library('datatables');
+
+        // Transaction-based stock (Purchase - Sale + Adjustment) so the listing matches the
+        // itemstock report instead of the stale products.quantity (FIFO quantity_balance sum),
+        // which cannot represent oversold (negative) stock.
+        $dbp  = $this->db->dbprefix;
+        $wid  = $warehouse_id ? (int) $warehouse_id : 0;
+        $pqty = "( SELECT product_id, SUM(quantity) qty FROM {$dbp}purchase_items" . ($wid ? " WHERE warehouse_id = {$wid}" : '') . " GROUP BY product_id ) PQty";
+        $sqty = "( SELECT si.product_id, SUM(si.quantity) qty FROM {$dbp}sale_items si JOIN {$dbp}sales s ON s.id = si.sale_id" . ($wid ? " WHERE si.warehouse_id = {$wid}" : '') . " GROUP BY si.product_id ) SQty";
+        $aqty = "( SELECT ai.product_id, SUM(CASE WHEN ai.type = 'addition' THEN ai.quantity ELSE -1 * ai.quantity END) qty FROM {$dbp}adjustment_items ai LEFT JOIN {$dbp}adjustments a ON a.id = ai.adjustment_id" . ($wid ? " WHERE ai.warehouse_id = {$wid}" : '') . " GROUP BY ai.product_id ) AQty";
+
         if ($warehouse_id) {
             $this->datatables
-                ->select($this->db->dbprefix('products') . ".id as productid, {$this->db->dbprefix('products')}.image as image, {$this->db->dbprefix('products')}.code as code, {$this->db->dbprefix('products')}.name as name, {$this->db->dbprefix('brands')}.name as brand, {$this->db->dbprefix('categories')}.name as cname, cost as cost, price as price, COALESCE(wp.quantity, 0) as quantity, {$this->db->dbprefix('units')}.code as unit, wp.rack as rack, alert_quantity", false)
+                ->select($this->db->dbprefix('products') . ".id as productid, {$this->db->dbprefix('products')}.image as image, {$this->db->dbprefix('products')}.code as code, {$this->db->dbprefix('products')}.name as name, {$this->db->dbprefix('brands')}.name as brand, {$this->db->dbprefix('categories')}.name as cname, cost as cost, price as price, (COALESCE(PQty.qty, 0) - COALESCE(SQty.qty, 0) + COALESCE(AQty.qty, 0)) as quantity, {$this->db->dbprefix('units')}.code as unit, wp.rack as rack, alert_quantity", false)
                 ->from('products');
             if ($this->Settings->display_all_products) {
                 $this->datatables->join('warehouses_products wp', "wp.product_id=products.id AND wp.warehouse_id={$warehouse_id}", 'left');
@@ -1559,15 +1569,21 @@ class Products extends MY_Controller
             }
             $this->datatables->join('categories', 'products.category_id=categories.id', 'left')
                 ->join('units', 'products.unit=units.id', 'left')
-                ->join('brands', 'products.brand=brands.id', 'left');
+                ->join('brands', 'products.brand=brands.id', 'left')
+                ->join($pqty, 'products.id = PQty.product_id', 'left')
+                ->join($sqty, 'products.id = SQty.product_id', 'left')
+                ->join($aqty, 'products.id = AQty.product_id', 'left');
             // ->group_by("products.id");
         } else {
             $this->datatables
-                ->select($this->db->dbprefix('products') . ".id as productid, {$this->db->dbprefix('products')}.image as image, {$this->db->dbprefix('products')}.code as code, {$this->db->dbprefix('products')}.name as name, {$this->db->dbprefix('brands')}.name as brand, {$this->db->dbprefix('categories')}.name as cname, cost as cost, price as price, COALESCE(quantity, 0) as quantity, {$this->db->dbprefix('units')}.code as unit, '' as rack, alert_quantity", false)
+                ->select($this->db->dbprefix('products') . ".id as productid, {$this->db->dbprefix('products')}.image as image, {$this->db->dbprefix('products')}.code as code, {$this->db->dbprefix('products')}.name as name, {$this->db->dbprefix('brands')}.name as brand, {$this->db->dbprefix('categories')}.name as cname, cost as cost, price as price, (COALESCE(PQty.qty, 0) - COALESCE(SQty.qty, 0) + COALESCE(AQty.qty, 0)) as quantity, {$this->db->dbprefix('units')}.code as unit, '' as rack, alert_quantity", false)
                 ->from('products')
                 ->join('categories', 'products.category_id=categories.id', 'left')
                 ->join('units', 'products.unit=units.id', 'left')
                 ->join('brands', 'products.brand=brands.id', 'left')
+                ->join($pqty, 'products.id = PQty.product_id', 'left')
+                ->join($sqty, 'products.id = SQty.product_id', 'left')
+                ->join($aqty, 'products.id = AQty.product_id', 'left')
                 ->group_by('products.id');
         }
         if (!$this->Owner && !$this->Admin) {
@@ -1890,6 +1906,24 @@ class Products extends MY_Controller
         $this->page_construct('products/index', $meta, $this->data);
     }
 
+    /**
+     * Warehouses for a product with transaction-based stock
+     * (Purchase - Sale + Adjustment), so the product detail screens match the
+     * itemstock report instead of the stale warehouses_products.quantity FIFO leftover.
+     * NOTE: the edit form intentionally keeps using getAllWarehousesWithPQ() directly,
+     * since it needs the raw stored quantity as its save baseline.
+     */
+    protected function _getWarehousesWithStock($id)
+    {
+        $warehouses = $this->products_model->getAllWarehousesWithPQ($id);
+        if ($warehouses) {
+            foreach ($warehouses as $warehouse) {
+                $warehouse->quantity = $this->site->getStockQuantity($id, $warehouse->id);
+            }
+        }
+        return $warehouses;
+    }
+
     /* --------------------------------------------------------------------------------------------- */
 
     public function modal_view($id = null)
@@ -1912,7 +1946,7 @@ class Products extends MY_Controller
         $this->data['category']    = $this->site->getCategoryByID($pr_details->category_id);
         $this->data['subcategory'] = $pr_details->subcategory_id ? $this->site->getCategoryByID($pr_details->subcategory_id) : null;
         $this->data['tax_rate']    = $pr_details->tax_rate ? $this->site->getTaxRateByID($pr_details->tax_rate) : null;
-        $this->data['warehouses']  = $this->products_model->getAllWarehousesWithPQ($id);
+        $this->data['warehouses']  = $this->_getWarehousesWithStock($id);
         $this->data['options']     = $this->products_model->getProductOptionsWithWH($id);
         $this->data['variants']    = $this->products_model->getProductOptions($id);
 
@@ -1940,7 +1974,7 @@ class Products extends MY_Controller
         $this->data['subcategory']      = $pr_details->subcategory_id ? $this->site->getCategoryByID($pr_details->subcategory_id) : null;
         $this->data['tax_rate']         = $pr_details->tax_rate ? $this->site->getTaxRateByID($pr_details->tax_rate) : null;
         $this->data['popup_attributes'] = $this->popup_attributes;
-        $this->data['warehouses']       = $this->products_model->getAllWarehousesWithPQ($id);
+        $this->data['warehouses']       = $this->_getWarehousesWithStock($id);
         $this->data['options']          = $this->products_model->getProductOptionsWithWH($id);
         $this->data['variants']         = $this->products_model->getProductOptions($id);
 
@@ -2510,7 +2544,7 @@ class Products extends MY_Controller
         $this->data['subcategory']      = $pr_details->subcategory_id ? $this->site->getCategoryByID($pr_details->subcategory_id) : null;
         $this->data['tax_rate']         = $pr_details->tax_rate ? $this->site->getTaxRateByID($pr_details->tax_rate) : null;
         $this->data['popup_attributes'] = $this->popup_attributes;
-        $this->data['warehouses']       = $this->products_model->getAllWarehousesWithPQ($id);
+        $this->data['warehouses']       = $this->_getWarehousesWithStock($id);
         $this->data['options']          = $this->products_model->getProductOptionsWithWH($id);
         $this->data['variants']         = $this->products_model->getProductOptions($id);
         $this->data['sold']             = $this->products_model->getSoldQty($id);

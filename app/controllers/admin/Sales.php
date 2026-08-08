@@ -2434,13 +2434,10 @@ class Sales extends MY_Controller
                     $option_id  = false;
                 }
                 $row->option = $option_id;
-                $pis         = $this->site->getPurchasedItems($row->id, $warehouse_id, $row->option);
-                if ($pis) {
-                    $row->quantity = 0;
-                    foreach ($pis as $pi) {
-                        $row->quantity += $pi->quantity_balance;
-                    }
-                }
+                // Available stock from transactions (Purchase - Sale + Adjustment) so POS shows
+                // the real on-hand figure and gates overselling on it, matching the itemstock
+                // report instead of the stale FIFO quantity_balance sum.
+                $row->quantity = $this->site->getStockQuantity($row->id, $warehouse_id);
                 if ($options) {
                     $option_quantity = 0;
                     foreach ($options as $option) {

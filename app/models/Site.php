@@ -661,6 +661,48 @@ class Site extends CI_Model
         return false;
     }
 
+    public function getStockQuantity($product_id, $warehouse_id = null)
+    {
+        // Transaction-based stock: Purchase - Sale + Adjustment.
+        // Matches the itemstock report instead of the FIFO quantity_balance sum,
+        // which cannot represent oversold (negative) stock and drifts over time.
+        $product_id   = (int) $product_id;
+        $warehouse_id = $warehouse_id ? (int) $warehouse_id : null;
+
+        // Purchased
+        $this->db->select('SUM(quantity) as qty', false);
+        $this->db->where('product_id', $product_id);
+        if ($warehouse_id) {
+            $this->db->where('warehouse_id', $warehouse_id);
+        }
+        $purchased = $this->db->get('purchase_items')->row();
+        $purchased = $purchased ? floatval($purchased->qty) : 0;
+
+        // Sold (warehouse is held on the parent sale)
+        $this->db->select('SUM(si.quantity) as qty', false);
+        $this->db->from('sale_items si');
+        $this->db->join('sales s', 's.id = si.sale_id', 'left');
+        $this->db->where('si.product_id', $product_id);
+        if ($warehouse_id) {
+            $this->db->where('s.warehouse_id', $warehouse_id);
+        }
+        $sold = $this->db->get()->row();
+        $sold = $sold ? floatval($sold->qty) : 0;
+
+        // Adjusted (addition/subtraction; warehouse is held on the adjustment)
+        $this->db->select("SUM(CASE WHEN ai.type = 'addition' THEN ai.quantity ELSE -1 * ai.quantity END) as qty", false);
+        $this->db->from('adjustment_items ai');
+        $this->db->join('adjustments a', 'a.id = ai.adjustment_id', 'left');
+        $this->db->where('ai.product_id', $product_id);
+        if ($warehouse_id) {
+            $this->db->where('a.warehouse_id', $warehouse_id);
+        }
+        $adjusted = $this->db->get()->row();
+        $adjusted = $adjusted ? floatval($adjusted->qty) : 0;
+
+        return ($purchased - $sold + $adjusted);
+    }
+
     public function getPurchasePayments($purchase_id)
     {
         $q = $this->db->get_where('payments', ['purchase_id' => $purchase_id]);

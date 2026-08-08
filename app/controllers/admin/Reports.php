@@ -1494,25 +1494,35 @@ class Reports extends MY_Controller
         // $sp = '( SELECT si.product_id, s.date as date, s.created_by as created_by, SUM( si.quantity ) soldQty, SUM( si.subtotal ) totalSale from ' . $this->db->dbprefix('sale_items') . ' si JOIN ' . $this->db->dbprefix('sales') . ' s on s.id = si.sale_id ';
 
 
+        // Stock adjustments subquery (addition/subtraction). Mirrors the logic used by the
+        // itemstock report so that Stock In Hand = Purchased - Sold + Adjusted, instead of
+        // relying on the stale purchase_items.quantity_balance FIFO leftover.
+        $ap = "( SELECT ai.product_id, SUM( CASE WHEN ai.type = 'addition' THEN ai.quantity ELSE -1 * ai.quantity END ) as adjustedQty from {$this->db->dbprefix('adjustment_items')} ai LEFT JOIN {$this->db->dbprefix('adjustments')} a on a.id = ai.adjustment_id ";
+
         if ($start_date || $warehouse || $user) {
             $sp .= ' WHERE ';
+            $ap .= ' WHERE ';
             if ($start_date) {
                 $start_date = $this->sma->fld($start_date);
                 $end_date   = $end_date ? $this->sma->fld($end_date) : date('Y-m-d');
                 $pp .= " AND p.date >= '{$start_date}' AND p.date <= '{$end_date}' ";
                 $sp .= " s.date >= '{$start_date}' AND s.date <= '{$end_date}' ";
+                $ap .= " a.date >= '{$start_date}' AND a.date <= '{$end_date}' ";
             }
             if ($warehouse) {
                 $pp .= " AND pi.warehouse_id = '{$warehouse}' ";
                 $sp .= ($start_date ? ' AND ' : '') . " s.warehouse_id = '{$warehouse}' ";
+                $ap .= ($start_date ? ' AND ' : '') . " a.warehouse_id = '{$warehouse}' ";
             }
             if ($user) {
                 $pp .= " AND p.created_by = '{$user}' ";
                 $sp .= ($start_date || $warehouse ? ' AND ' : '') . " s.created_by = '{$user}' ";
+                $ap .= ($start_date || $warehouse ? ' AND ' : '') . " a.created_by = '{$user}' ";
             }
         }
         $pp .= ' GROUP BY pi.product_id ) PCosts';
         $sp .= ' GROUP BY si.product_id ) PSales';
+        $ap .= ' GROUP BY ai.product_id ) PAdjustments';
 
         // $this->print_arrays($this->db->last_query());
 
@@ -1522,14 +1532,15 @@ class Reports extends MY_Controller
                 ->select($this->db->dbprefix('products') . '.code, ' . $this->db->dbprefix('products') . '.name,
                 COALESCE( PCosts.purchasedQty, 0 ) as PurchasedQty,
                 COALESCE( PSales.soldQty, 0 ) as SoldQty,
-                COALESCE( PCosts.balacneQty, 0 ) as BalacneQty,
+                (COALESCE( PCosts.purchasedQty, 0 ) - COALESCE( PSales.soldQty, 0 ) + COALESCE( PAdjustments.adjustedQty, 0 )) as BalacneQty,
                 COALESCE( PCosts.totalPurchase, 0 ) as TotalPurchase,
-                COALESCE( PCosts.balacneValue, 0 ) as TotalBalance,
+                ((COALESCE( PCosts.purchasedQty, 0 ) - COALESCE( PSales.soldQty, 0 ) + COALESCE( PAdjustments.adjustedQty, 0 )) * COALESCE( ' . $this->db->dbprefix('products') . '.cost, 0 )) as TotalBalance,
                 COALESCE( PSales.totalSale, 0 ) as TotalSales,
                 (COALESCE( PSales.totalSale, 0 ) - COALESCE( PCosts.totalPurchase, 0 )) as Profit', false)
                 ->from('products')
                 ->join($sp, 'products.id = PSales.product_id', 'left')
                 ->join($pp, 'products.id = PCosts.product_id', 'left')
+                ->join($ap, 'products.id = PAdjustments.product_id', 'left')
                 ->where('products.type !=', 'combo')
                 ->group_by('products.code');
 
@@ -1654,10 +1665,15 @@ class Reports extends MY_Controller
                 CONCAT(COALESCE( PCosts.purchasedQty, 0 ), '__', COALESCE( PCosts.totalPurchase, 0 )) as purchased,
                 CONCAT(COALESCE( PSales.soldQty, 0 ), '__', COALESCE( PSales.totalSale, 0 )) as sold,
                 (COALESCE( PSales.totalSale, 0 ) - COALESCE( PCosts.totalPurchase, 0 )) as Profit,
-                CONCAT(COALESCE( PCosts.balacneQty, 0 ), '__', COALESCE( PCosts.balacneValue, 0 )) as balance, {$this->db->dbprefix('products')}.id as id", false)
+                CONCAT(
+                    (COALESCE( PCosts.purchasedQty, 0 ) - COALESCE( PSales.soldQty, 0 ) + COALESCE( PAdjustments.adjustedQty, 0 )),
+                    '__',
+                    ((COALESCE( PCosts.purchasedQty, 0 ) - COALESCE( PSales.soldQty, 0 ) + COALESCE( PAdjustments.adjustedQty, 0 )) * COALESCE( {$this->db->dbprefix('products')}.cost, 0 ))
+                ) as balance, {$this->db->dbprefix('products')}.id as id", false)
                 ->from('products')
                 ->join($sp, 'products.id = PSales.product_id', 'left')
                 ->join($pp, 'products.id = PCosts.product_id', 'left')
+                ->join($ap, 'products.id = PAdjustments.product_id', 'left')
                 ->where('products.type !=', 'combo')
                 ->group_by('products.code');
 
